@@ -13,6 +13,6 @@ cd "$SCRIPT_DIR/.."
 
 npm pkg set version="$VERSION"
 git add package.json
-git commit -m "chore: release v$VERSION"
+git diff --cached --quiet || git commit -m "chore: release v$VERSION"
 git tag "v$VERSION"
 git push origin main "v$VERSION"
