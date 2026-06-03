@@ -31,18 +31,31 @@
       "build-src/build/**"
     ],
     "linux": {
-      "target": ["AppImage", "deb", "rpm"]
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm"
+      ]
     },
     "rpm": {
-      "fpm": ["--rpm-digest", "sha256", "--rpm-compression", "xz"],
+      "fpm": [
+        "--rpm-digest",
+        "sha256",
+        "--rpm-compression",
+        "xz"
+      ],
       "afterInstall": "scripts/afterInstall.sh",
       "afterRemove": "scripts/afterRemove.sh"
     },
     "win": {
-      "target": ["nsis"]
+      "target": [
+        "nsis"
+      ]
     },
     "mac": {
-      "target": ["dmg"]
+      "target": [
+        "dmg"
+      ]
     },
     "publish": {
       "provider": "github"
