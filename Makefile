@@ -1,4 +1,4 @@
-.PHONY: build dist release start clean
+.PHONY: build dist release rerelease start clean
 
 build:
 	bash build.sh
@@ -8,6 +8,9 @@ dist:
 
 release:
 	bash scripts/release.sh
+
+rerelease:
+	bash scripts/rerelease.sh
 
 start:
 	npm start
