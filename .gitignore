@@ -1,0 +1,5 @@
+build-src/
+node_modules/
+dist/
+.claude/
+.env

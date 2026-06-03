@@ -1,0 +1,51 @@
+{
+  "name": "solyto",
+  "version": "1.0.7",
+  "description": "solyto desktop",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Leander Muskalla",
+    "email": "contact@solyto.app"
+  },
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "electron-updater": "^6.0.0"
+  },
+  "devDependencies": {
+    "electron": "^36.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "build": {
+    "appId": "app.solyto.desktop",
+    "productName": "solyto",
+    "icon": "icon.png",
+    "files": [
+      "main.js",
+      "preload.js",
+      "build-src/build/**"
+    ],
+    "linux": {
+      "target": ["AppImage", "deb", "rpm"]
+    },
+    "rpm": {
+      "fpm": ["--rpm-digest", "sha256", "--rpm-compression", "xz"],
+      "afterInstall": "scripts/afterInstall.sh",
+      "afterRemove": "scripts/afterRemove.sh"
+    },
+    "win": {
+      "target": ["nsis"]
+    },
+    "mac": {
+      "target": ["dmg"]
+    },
+    "publish": {
+      "provider": "github"
+    }
+  }
+}

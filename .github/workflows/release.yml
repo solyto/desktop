@@ -1,0 +1,61 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            args: --linux
+          - os: windows-latest
+            args: --win
+          - os: macos-latest
+            args: --mac
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: desktop
+
+      - uses: actions/checkout@v4
+        with:
+          repository: solyto/app
+          token: ${{ secrets.GH_TOKEN }}
+          path: app
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install fpm
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install -y ruby ruby-dev build-essential && sudo gem install fpm
+
+      - name: Set version from tag
+        working-directory: desktop
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          npm pkg set version="$VERSION"
+
+      - name: Build frontend
+        working-directory: desktop
+        run: bash build.sh
+
+      - name: Install dependencies
+        working-directory: desktop
+        run: npm install
+
+      - name: Build and publish
+        working-directory: desktop
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+        run: USE_SYSTEM_FPM=true npx electron-builder ${{ matrix.args }} --publish always
