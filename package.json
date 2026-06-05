@@ -41,15 +41,26 @@
       "afterRemove": "scripts/afterRemove.sh"
     },
     "win": {
-      "target": ["nsis"],
+      "target": [
+        "nsis"
+      ],
       "artifactName": "solyto-setup.exe"
     },
     "mac": {
-      "target": ["dmg"],
+      "target": [
+        "dmg"
+      ],
       "artifactName": "solyto.dmg"
     },
+    "deb": {
+      "afterInstall": "scripts/afterInstall.sh"
+    },
     "linux": {
-      "target": ["AppImage", "deb", "rpm"],
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm"
+      ],
       "artifactName": "solyto.${ext}"
     },
     "publish": {
