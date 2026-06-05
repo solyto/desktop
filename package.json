@@ -30,13 +30,6 @@
       "preload.js",
       "build-src/build/**"
     ],
-    "linux": {
-      "target": [
-        "AppImage",
-        "deb",
-        "rpm"
-      ]
-    },
     "rpm": {
       "fpm": [
         "--rpm-digest",
@@ -48,14 +41,16 @@
       "afterRemove": "scripts/afterRemove.sh"
     },
     "win": {
-      "target": [
-        "nsis"
-      ]
+      "target": ["nsis"],
+      "artifactName": "solyto-setup.exe"
     },
     "mac": {
-      "target": [
-        "dmg"
-      ]
+      "target": ["dmg"],
+      "artifactName": "solyto.dmg"
+    },
+    "linux": {
+      "target": ["AppImage", "deb", "rpm"],
+      "artifactName": "solyto.${ext}"
     },
     "publish": {
       "provider": "github",
