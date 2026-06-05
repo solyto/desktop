@@ -1,6 +1,6 @@
 {
   "name": "solyto",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "solyto desktop",
   "main": "main.js",
   "scripts": {
