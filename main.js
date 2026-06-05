@@ -5,15 +5,42 @@ const { pathToFileURL } = require('url');
 const fs = require('fs');
 
 const BUILD_DIR = path.join(__dirname, 'build-src', 'build');
+const PROTOCOL = 'solyto';
 
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { standard: true, secure: true, supportFetchAPI: true } }
 ]);
 
+app.setAsDefaultProtocolClient(PROTOCOL);
+
+let mainWindow = null;
+
+function handleDeepLink(url) {
+  if (!mainWindow) return;
+  if (mainWindow.isMinimized()) mainWindow.restore();
+  mainWindow.focus();
+  mainWindow.loadURL('app://localhost/auth/login');
+}
+
+const gotLock = app.requestSingleInstanceLock();
+if (!gotLock) {
+  app.quit();
+} else {
+  app.on('second-instance', (event, argv) => {
+    const url = argv.find(arg => arg.startsWith(PROTOCOL + '://'));
+    handleDeepLink(url);
+  });
+}
+
+app.on('open-url', (event, url) => {
+  event.preventDefault();
+  handleDeepLink(url);
+});
+
 function createWindow() {
   Menu.setApplicationMenu(null);
 
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
     frame: false,
@@ -24,7 +51,7 @@ function createWindow() {
     }
   });
 
-  win.loadURL('app://localhost/');
+  mainWindow.loadURL('app://localhost/');
 }
 
 app.whenReady().then(() => {
@@ -65,7 +92,10 @@ app.whenReady().then(() => {
   createWindow();
 
   app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    if (BrowserWindow.getAllWindows().length === 0) {
+      mainWindow = null;
+      createWindow();
+    }
   });
 });
 
