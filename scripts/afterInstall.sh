@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ -f '/opt/solyto/chrome-sandbox' ]; then
+    chown root:root /opt/solyto/chrome-sandbox
+    chmod 4755 /opt/solyto/chrome-sandbox
+fi
+
 if type update-alternatives >/dev/null 2>&1; then
     update-alternatives --install '/usr/bin/solyto' 'solyto' '/opt/solyto/solyto' 100 || true
 else

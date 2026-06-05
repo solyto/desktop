@@ -14,7 +14,6 @@
 	import { onMount } from 'svelte';
 	import { afterNavigate, goto } from '$app/navigation';
 	import { urls } from '$lib/config/urls';
-	import { page } from '$app/state';
 	import { resolve } from '$app/paths';
 	import { setUserNotifications } from '$lib/state/UserNotifications.svelte';
 	import { setCookieConsent } from '$lib/state/CookieConsent.svelte';
@@ -30,8 +29,9 @@
 	import CommandPaletteModal from '$lib/components/command-palette/CommandPalette.svelte';
 	import { registerCommands } from '$lib/components/command-palette/Commands.svelte';
 	import { getNavigation, setNavigation } from '$lib/state/Navigation.svelte';
-	import { getPageSlug, getPageFeature } from '$lib/helpers/NavHelper';
+	import { getPageFeature, showNavbar, isAuthRoute, isSetupRoute, isDashboard } from '$lib/helpers/NavHelper';
 	import TitleBar from '$lib/components/ui/TitleBar.svelte';
+	import { featureConfig } from '$lib/config/features';
 
 	let { children } = $props();
 
@@ -63,7 +63,13 @@
 	onMount(async () => {
 		theme.load();
 
-		if (!auth.loggedIn && !isAuthRoute()) await goto(resolve(urls.login));
+		if (!auth.loggedIn && !isAuthRoute() && !isSetupRoute()) {
+			if (featureConfig.firstStartupOptions) {
+				await goto(resolve(urls.setup));
+			} else {
+				await goto(resolve(urls.login));
+			}
+		}
 
 		const updateHeight = () => { innerHeight = window.innerHeight; };
 		updateHeight();
@@ -83,21 +89,6 @@
 		if (feature) nav.addUsage(feature);
 	});
 
-	function showNavbar(): boolean {
-		return !isAuthRoute() && !isAdminRoute();
-	}
-
-	function isDashboard(): boolean {
-		return page.url.pathname === urls.home;
-	}
-
-	function isAdminRoute(): boolean {
-		return page.url.pathname.startsWith('/admin');
-	}
-
-	function isAuthRoute(): boolean {
-		return page.url.pathname.startsWith('/auth');
-	}
 </script>
 
 <svelte:head>

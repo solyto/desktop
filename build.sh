@@ -25,7 +25,7 @@ rm -f package-lock.json
 npm install
 
 echo "→ Building..."
-PUBLIC_API_URL=https://api.solyto.app npm run build
+PUBLIC_API_URL=https://api.solyto.app PUBLIC_DESKTOP=true PUBLIC_REDIRECT_AFTER_LOGOUT=/ npm run build
 
 echo "→ Installing Electron..."
 cd "$SCRIPT_DIR"
