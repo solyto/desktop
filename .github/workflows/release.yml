@@ -70,6 +70,8 @@ jobs:
           Remove-Item package-lock.json -ErrorAction SilentlyContinue
           npm install
           $env:PUBLIC_API_URL="https://api.solyto.app"
+          $env:PUBLIC_DESKTOP="true"
+          $env:PUBLIC_REDIRECT_AFTER_LOGOUT="/"
           npm run build
 
       - name: Install dependencies
