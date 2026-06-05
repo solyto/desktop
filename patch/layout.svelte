@@ -16,9 +16,7 @@
 	import { urls } from '$lib/config/urls';
 	import { resolve } from '$app/paths';
 	import { setUserNotifications } from '$lib/state/UserNotifications.svelte';
-	import { setCookieConsent } from '$lib/state/CookieConsent.svelte';
-	import CookieBanner from '$lib/components/ui/CookieBanner.svelte';
-	import { getPwaInstall, setPwaInstall } from '$lib/state/PwaInstall.svelte';
+	import { setPwaInstall } from '$lib/state/PwaInstall.svelte';
 	import { setWelcomeTour } from '$lib/state/WelcomeTour.svelte';
 	import WelcomeTour from '$lib/components/tour/WelcomeTour.svelte';
 	import { setThemeState } from '$lib/state/Theme.svelte';
@@ -43,7 +41,6 @@
 	setUiNotifications();
 	setUserNotifications();
 	setNavigation();
-	setCookieConsent();
 	setPwaInstall();
 	setWelcomeTour();
 	setQuickAdd();
@@ -118,9 +115,6 @@
 		</div>
 	{/if}
 	<WelcomeTour />
-	{#if !isAuthRoute()}
-		<CookieBanner />
-	{/if}
 	{#if showNavbar() && isDashboard()}
 		<QuickAddFab />
 		{#if quickAdd.open}
