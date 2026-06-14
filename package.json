@@ -46,6 +46,9 @@
       ],
       "artifactName": "solyto-setup-${version}.exe"
     },
+    "nsis": {
+      "include": "scripts/uninstaller.nsh"
+    },
     "mac": {
       "target": [
         "dmg"
@@ -53,7 +56,8 @@
       "artifactName": "solyto-${version}.dmg"
     },
     "deb": {
-      "afterInstall": "scripts/afterInstall.sh"
+      "afterInstall": "scripts/afterInstall.sh",
+      "afterRemove": "scripts/afterRemove.sh"
     },
     "linux": {
       "target": [

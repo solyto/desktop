@@ -87,9 +87,28 @@ app.whenReady().then(() => {
   });
   ipcMain.on('window:close', () => BrowserWindow.getFocusedWindow()?.close());
 
-  autoUpdater.checkForUpdatesAndNotify();
-
   createWindow();
+
+  autoUpdater.on('update-available', (info) => {
+    mainWindow?.webContents.send('updater:status', { type: 'available', version: info.version });
+  });
+  autoUpdater.on('update-not-available', () => {
+    mainWindow?.webContents.send('updater:status', { type: 'up-to-date' });
+  });
+  autoUpdater.on('download-progress', (progress) => {
+    mainWindow?.webContents.send('updater:status', { type: 'downloading', percent: Math.round(progress.percent) });
+  });
+  autoUpdater.on('update-downloaded', () => {
+    mainWindow?.webContents.send('updater:status', { type: 'ready' });
+  });
+  autoUpdater.on('error', () => {
+    mainWindow?.webContents.send('updater:status', { type: 'error' });
+  });
+
+  ipcMain.handle('updater:check', () => autoUpdater.checkForUpdates());
+  ipcMain.on('updater:install', () => autoUpdater.quitAndInstall());
+
+  autoUpdater.checkForUpdatesAndNotify();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

@@ -13,3 +13,8 @@ fi
 if hash update-desktop-database 2>/dev/null; then
     update-desktop-database /usr/share/applications || true
 fi
+
+# Remove user data for all users
+for home in /root /home/*; do
+    rm -rf "$home/.config/solyto"
+done

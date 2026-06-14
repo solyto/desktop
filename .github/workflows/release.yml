@@ -9,7 +9,16 @@ permissions:
   contents: write
 
 jobs:
-  release:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_notes: true
+
+  build:
+    needs: create-release
     strategy:
       matrix:
         include:

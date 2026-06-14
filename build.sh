@@ -5,6 +5,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SRC_DIR="$SCRIPT_DIR/../app"
 BUILD_DIR="$SCRIPT_DIR/build-src"
 
+VERSION=$(node -p "require('$SCRIPT_DIR/package.json').version")
+
 echo "→ Syncing app source..."
 rsync -a --delete \
   --exclude=".svelte-kit" \
@@ -25,7 +27,7 @@ rm -f package-lock.json
 npm install
 
 echo "→ Building..."
-PUBLIC_API_URL=https://api.solyto.app PUBLIC_DESKTOP=true PUBLIC_REDIRECT_AFTER_LOGOUT=/ npm run build
+PUBLIC_API_URL=https://api.solyto.app PUBLIC_DESKTOP=true PUBLIC_VERSION="$VERSION" PUBLIC_REDIRECT_AFTER_LOGOUT=/ npm run build
 
 echo "→ Installing Electron..."
 cd "$SCRIPT_DIR"
