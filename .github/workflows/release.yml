@@ -12,12 +12,20 @@ jobs:
   create-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          generate_notes: true
+      - uses: actions/checkout@v4
 
-  build:
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if ! gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release create "$GITHUB_REF_NAME" \
+              --draft \
+              --title "$GITHUB_REF_NAME" \
+              --generate-notes
+          fi
+
+  release:
     needs: create-release
     strategy:
       matrix:
@@ -94,3 +102,14 @@ jobs:
           CSC_IDENTITY_AUTO_DISCOVERY: false
           USE_SYSTEM_FPM: true
         run: npx electron-builder ${{ matrix.args }} --publish always
+
+  publish-release:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release edit "$GITHUB_REF_NAME" --draft=false
