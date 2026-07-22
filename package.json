@@ -12,7 +12,7 @@
     "name": "Leander Muskalla",
     "email": "contact@solyto.app"
   },
-  "license": "ISC",
+  "license": "AGPL-3.0-only",
   "type": "commonjs",
   "dependencies": {
     "electron-updater": "^6.0.0"
