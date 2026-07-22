@@ -20,14 +20,12 @@ cp "$SCRIPT_DIR/patch/layout.svelte" "$BUILD_DIR/src/routes/+layout.svelte"
 cp "$SCRIPT_DIR/patch/TitleBar.svelte" "$BUILD_DIR/src/lib/components/ui/TitleBar.svelte"
 cp "$SCRIPT_DIR/patch/app.d.ts" "$BUILD_DIR/src/app.d.ts"
 
-# Desktop-only build dependency: Electron loads a static (prerendered) build.
-# Everything else comes from app/package.json (single source of truth).
-( cd "$BUILD_DIR" && npm pkg set "devDependencies.@sveltejs/adapter-static=3.0.10" )
-
 echo "→ Installing dependencies..."
+# Desktop-only build dependency: Electron loads a static (prerendered) build.
+# Adding it keeps app's carried-over lockfile intact (deterministic tree);
+# everything else comes from app (single source of truth).
 cd "$BUILD_DIR"
-rm -f package-lock.json
-npm install
+npm install --save-dev --save-exact @sveltejs/adapter-static@3.0.10
 
 echo "→ Building..."
 PUBLIC_API_URL=https://api.solyto.app PUBLIC_DESKTOP=true PUBLIC_VERSION="$VERSION" PUBLIC_REDIRECT_AFTER_LOGOUT=/ npm run build
