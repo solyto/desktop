@@ -16,10 +16,13 @@ rsync -a --delete \
 
 echo "→ Applying desktop patches..."
 cp "$SCRIPT_DIR/patch/svelte.config.js" "$BUILD_DIR/svelte.config.js"
-cp "$SCRIPT_DIR/patch/package.json" "$BUILD_DIR/package.json"
 cp "$SCRIPT_DIR/patch/layout.svelte" "$BUILD_DIR/src/routes/+layout.svelte"
 cp "$SCRIPT_DIR/patch/TitleBar.svelte" "$BUILD_DIR/src/lib/components/ui/TitleBar.svelte"
 cp "$SCRIPT_DIR/patch/app.d.ts" "$BUILD_DIR/src/app.d.ts"
+
+# Desktop-only build dependency: Electron loads a static (prerendered) build.
+# Everything else comes from app/package.json (single source of truth).
+( cd "$BUILD_DIR" && npm pkg set "devDependencies.@sveltejs/adapter-static=3.0.10" )
 
 echo "→ Installing dependencies..."
 cd "$BUILD_DIR"
