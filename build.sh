@@ -16,8 +16,6 @@ rsync -a --delete \
 
 echo "→ Applying desktop patches..."
 cp "$SCRIPT_DIR/patch/svelte.config.js" "$BUILD_DIR/svelte.config.js"
-cp "$SCRIPT_DIR/patch/layout.svelte" "$BUILD_DIR/src/routes/+layout.svelte"
-cp "$SCRIPT_DIR/patch/TitleBar.svelte" "$BUILD_DIR/src/lib/components/ui/TitleBar.svelte"
 cp "$SCRIPT_DIR/patch/app.d.ts" "$BUILD_DIR/src/app.d.ts"
 
 echo "→ Installing dependencies..."
