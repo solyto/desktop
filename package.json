@@ -1,6 +1,6 @@
 {
   "name": "solyto",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "solyto desktop",
   "main": "main.js",
   "scripts": {
@@ -28,7 +28,7 @@
     "files": [
       "main.js",
       "preload.js",
-      "build-src/build/**"
+      "frontend/build/**"
     ],
     "rpm": {
       "fpm": [
