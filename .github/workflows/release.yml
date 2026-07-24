@@ -79,13 +79,14 @@ jobs:
           if (Test-Path $dst) { Remove-Item $dst -Recurse -Force }
           Copy-Item $src $dst -Recurse -Exclude @(".svelte-kit", "build", "node_modules")
           Copy-Item "patch/svelte.config.js" "$dst/svelte.config.js" -Force
-          Copy-Item "patch/package.json" "$dst/package.json" -Force
           Copy-Item "patch/app.d.ts" "$dst/src/app.d.ts" -Force
           cd $dst
-          Remove-Item package-lock.json -ErrorAction SilentlyContinue
-          npm install
+          # Desktop-only build dependency, matching build.sh: keep app's lockfile
+          # (deterministic tree) and add the static adapter Electron needs.
+          npm install --save-dev --save-exact @sveltejs/adapter-static@3.0.10
           $env:PUBLIC_API_URL="https://api.solyto.app"
           $env:PUBLIC_DESKTOP="true"
+          $env:PUBLIC_VERSION=$env:GITHUB_REF_NAME.TrimStart('v')
           $env:PUBLIC_REDIRECT_AFTER_LOGOUT="/"
           npm run build
 
