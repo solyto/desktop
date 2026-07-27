@@ -8,7 +8,11 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$SCRIPT_DIR/.."
 
-VERSION=$(node -p "require('$ROOT/package.json').version")
+# Resolve the version with node's cwd already at the root, not via an absolute
+# path: under Git Bash on Windows $ROOT is a POSIX path (/d/a/...) that
+# Windows-native node cannot resolve.
+cd "$ROOT"
+VERSION=$(node -p "require('./package.json').version")
 
 echo "→ Installing frontend dependencies..."
 cd "$ROOT/frontend"
