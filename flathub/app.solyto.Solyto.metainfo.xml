@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>app.solyto.Solyto</id>
+
+  <name>solyto</name>
+  <summary>Free, private, all-in-one personal organizer</summary>
+
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>AGPL-3.0-only</project_license>
+
+  <developer id="app.solyto">
+    <name>Leander Muskalla</name>
+  </developer>
+
+  <description>
+    <p>
+      solyto is a free, private, all-in-one personal management app — covering your
+      todos, contacts, calendar, notes, news, music and book library in one place,
+      with one login, and one coherent interface.
+    </p>
+    <p>Connect to your own self-hosted solyto instance or use solyto.app.</p>
+    <p>Features:</p>
+    <ul>
+      <li>Todos with one-line creation and short commands</li>
+      <li>Calendar with DAV sync</li>
+      <li>Contacts with DAV sync</li>
+      <li>Notebook — folders, markdown, WYSIWYG editor</li>
+      <li>News reader</li>
+      <li>Music, Book, Game, Recipe, Quote and Link libraries</li>
+      <li>Check In — track your mood and health</li>
+      <li>Time Tracking with Pomodoro Timer</li>
+      <li>Finance Tracking — income and wealth</li>
+      <li>Clipboard — copy things across devices</li>
+      <li>Dashboard combining all your data</li>
+      <li>Multiple themes including Skyrim, paper, and Atari</li>
+    </ul>
+    <p>Highlights:</p>
+    <ul>
+      <li>Import music from Deezer or Discogs, books from Hardcover or Goodreads</li>
+      <li>Get notified about new releases from favorite artists or authors</li>
+      <li>Automatically save links via Telegram Bot</li>
+      <li>Daily digest notifications via Telegram, Email or Push</li>
+    </ul>
+    <p>Privacy:</p>
+    <p>
+      No tracking, no analytics, no cookies, no AI, no subscriptions. solyto only
+      contacts external services when you explicitly request it.
+    </p>
+  </description>
+
+  <launchable type="desktop-id">app.solyto.Solyto.desktop</launchable>
+
+  <url type="homepage">https://solyto.app</url>
+  <url type="bugtracker">https://github.com/solyto/desktop/issues</url>
+  <url type="vcs-browser">https://github.com/solyto/desktop</url>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/solyto/desktop/main/flathub/screenshots/1.png</image>
+      <caption>The dashboard, combining every area of your data in one view</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/solyto/desktop/main/flathub/screenshots/2.png</image>
+      <caption>Todos, created from a single line with short commands</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/solyto/desktop/main/flathub/screenshots/3.png</image>
+      <caption>Calendar and contacts, kept in sync over DAV</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/solyto/desktop/main/flathub/screenshots/4.png</image>
+      <caption>The notebook, with folders and a markdown editor</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/solyto/desktop/main/flathub/screenshots/5.png</image>
+      <caption>Music, book and game libraries with release tracking</caption>
+    </screenshot>
+  </screenshots>
+
+  <content_rating type="oars-1.1" />
+
+  <releases>
+    <release version="1.0.13" date="2026-07-24">
+      <description>
+        <p>First Flathub release.</p>
+      </description>
+    </release>
+  </releases>
+</component>

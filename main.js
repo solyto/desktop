@@ -1,17 +1,22 @@
 const { app, BrowserWindow, protocol, net, session, Menu, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('path');
+
+// Flatpak ships its own update mechanism; the in-app updater must stay dormant there.
+const isFlatpak = !!process.env.FLATPAK_ID;
 const { pathToFileURL } = require('url');
 const fs = require('fs');
 
-const BUILD_DIR = path.join(__dirname, 'build-src', 'build');
+const BUILD_DIR = path.join(__dirname, 'frontend', 'build');
 const PROTOCOL = 'solyto';
 
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { standard: true, secure: true, supportFetchAPI: true } }
 ]);
 
-app.setAsDefaultProtocolClient(PROTOCOL);
+// Under Flatpak the solyto:// handler is registered via the desktop file's MimeType;
+// calling this at runtime just fails noisily (no xdg-settings in the sandbox).
+if (!isFlatpak) app.setAsDefaultProtocolClient(PROTOCOL);
 
 let mainWindow = null;
 
@@ -105,10 +110,15 @@ app.whenReady().then(() => {
     mainWindow?.webContents.send('updater:status', { type: 'error' });
   });
 
-  ipcMain.handle('updater:check', () => autoUpdater.checkForUpdates());
-  ipcMain.on('updater:install', () => autoUpdater.quitAndInstall());
+  ipcMain.handle('updater:check', () => {
+    if (isFlatpak) return Promise.resolve(null);
+    return autoUpdater.checkForUpdates();
+  });
+  ipcMain.on('updater:install', () => {
+    if (!isFlatpak) autoUpdater.quitAndInstall();
+  });
 
-  autoUpdater.checkForUpdatesAndNotify();
+  if (!isFlatpak) autoUpdater.checkForUpdatesAndNotify();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

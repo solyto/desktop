@@ -1,0 +1,63 @@
+app-id: app.solyto.Solyto
+runtime: org.freedesktop.Platform
+runtime-version: '25.08'
+sdk: org.freedesktop.Sdk
+base: org.electronjs.Electron2.BaseApp
+base-version: '25.08'
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.node22
+command: solyto
+
+finish-args:
+  - --share=ipc
+  - --share=network
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+  - --talk-name=org.freedesktop.Notifications
+
+modules:
+  - name: solyto
+    buildsystem: simple
+    build-options:
+      append-path: /usr/lib/sdk/node22/bin
+      env:
+        npm_config_offline: 'true'
+        npm_config_cache: /run/build/solyto/flatpak-node/npm-cache
+        XDG_CACHE_HOME: /run/build/solyto/flatpak-node/cache
+    build-commands:
+      # 1. Build the SvelteKit frontend into a prerendered static site (offline).
+      - |
+        cd frontend
+        npm ci --offline
+        PUBLIC_API_URL=https://api.solyto.app \
+        PUBLIC_DESKTOP=true \
+        PUBLIC_VERSION=1.0.13 \
+        PUBLIC_REDIRECT_AFTER_LOGOUT=/ \
+          npm run build
+      # 2. Install the Electron shell's runtime deps (offline). The electron binary
+      #    is extracted from the vendored cache under $XDG_CACHE_HOME/electron.
+      - |
+        cd flathub/npm
+        npm ci --offline
+      # 3. Assemble the app under /app/solyto.
+      - |
+        install -d /app/solyto
+        cp -a main.js preload.js icon.png /app/solyto/
+        cp -a flathub/npm/package.json /app/solyto/
+        cp -a flathub/npm/node_modules /app/solyto/node_modules
+        install -d /app/solyto/frontend
+        cp -a frontend/build /app/solyto/frontend/build
+      # 4. Launcher, desktop entry, icon and AppStream metainfo.
+      - |
+        install -Dm755 flathub/solyto.sh /app/bin/solyto
+        install -Dm644 flathub/app.solyto.Solyto.desktop /app/share/applications/app.solyto.Solyto.desktop
+        install -Dm644 icon.png /app/share/icons/hicolor/512x512/apps/app.solyto.Solyto.png
+        install -Dm644 flathub/app.solyto.Solyto.metainfo.xml /app/share/metainfo/app.solyto.Solyto.metainfo.xml
+    sources:
+      - type: git
+        url: https://github.com/solyto/desktop.git
+        tag: v1.0.13
+        # commit: <fill in the exact sha of tag v1.0.13 before opening the Flathub PR>
+      - generated-sources.frontend.json
+      - generated-sources.electron.json

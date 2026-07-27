@@ -44,11 +44,6 @@ jobs:
         with:
           path: desktop
 
-      - uses: actions/checkout@v4
-        with:
-          repository: solyto/app
-          path: app
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -64,31 +59,10 @@ jobs:
           VERSION="${GITHUB_REF_NAME#v}"
           npm pkg set version="$VERSION"
 
-      - name: Build frontend (Linux/macOS)
-        if: matrix.os != 'windows-latest'
+      - name: Build frontend
         working-directory: desktop
-        run: bash build.sh
-
-      - name: Build frontend (Windows)
-        if: matrix.os == 'windows-latest'
-        working-directory: desktop
-        shell: pwsh
-        run: |
-          $src = "../app"
-          $dst = "build-src"
-          if (Test-Path $dst) { Remove-Item $dst -Recurse -Force }
-          Copy-Item $src $dst -Recurse -Exclude @(".svelte-kit", "build", "node_modules")
-          Copy-Item "patch/svelte.config.js" "$dst/svelte.config.js" -Force
-          Copy-Item "patch/app.d.ts" "$dst/src/app.d.ts" -Force
-          cd $dst
-          # Desktop-only build dependency, matching build.sh: keep app's lockfile
-          # (deterministic tree) and add the static adapter Electron needs.
-          npm install --save-dev --save-exact @sveltejs/adapter-static@3.0.10
-          $env:PUBLIC_API_URL="https://api.solyto.app"
-          $env:PUBLIC_DESKTOP="true"
-          $env:PUBLIC_VERSION=$env:GITHUB_REF_NAME.TrimStart('v')
-          $env:PUBLIC_REDIRECT_AFTER_LOGOUT="/"
-          npm run build
+        shell: bash
+        run: bash scripts/build-frontend.sh
 
       - name: Install dependencies
         working-directory: desktop

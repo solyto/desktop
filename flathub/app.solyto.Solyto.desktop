@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=solyto
+Comment=Free, private, all-in-one personal organizer
+Exec=solyto %u
+Icon=app.solyto.Solyto
+Terminal=false
+Categories=Office;Utility;
+Keywords=organizer;todo;calendar;contacts;notes;productivity;
+StartupWMClass=solyto
+MimeType=x-scheme-handler/solyto;
