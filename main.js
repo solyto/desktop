@@ -1,4 +1,4 @@
-const { app, BrowserWindow, protocol, net, session, Menu, ipcMain } = require('electron');
+const { app, BrowserWindow, protocol, net, session, Menu, ipcMain, shell } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('path');
 
@@ -9,6 +9,31 @@ const fs = require('fs');
 
 const BUILD_DIR = path.join(__dirname, 'frontend', 'build');
 const PROTOCOL = 'solyto';
+
+// Schemes that may be handed to the OS when a link leaves the app window.
+// Anything else (file:, chrome-extension:, custom protocols, ...) is denied
+// outright: arbitrary schemes can invoke OS protocol handlers.
+const EXTERNAL_URL_SCHEMES = ['http:', 'https:', 'mailto:', 'tel:'];
+
+function urlProtocol(url) {
+  try {
+    return new URL(url).protocol;
+  } catch {
+    return '';
+  }
+}
+
+function isExternalUrl(url) {
+  return EXTERNAL_URL_SCHEMES.includes(urlProtocol(url));
+}
+
+function openExternal(url) {
+  // Malformed/unopenable URLs from semi-trusted content must not become
+  // unhandled rejections in the main process.
+  shell.openExternal(url).catch((error) => {
+    console.error(`solyto: failed to open ${url} in default browser:`, error);
+  });
+}
 
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { standard: true, secure: true, supportFetchAPI: true } }
@@ -54,6 +79,23 @@ function createWindow() {
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
     }
+  });
+
+  // Links leaving the SPA (target="_blank", window.open) open in the user's
+  // default browser, never in a bare Electron child window.
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    if (isExternalUrl(url)) openExternal(url);
+    return { action: 'deny' };
+  });
+
+  // Top-level navigations stay on app:// (SPA routes like the setup page's
+  // window.location.href = '/auth/login'); everything else — the logout
+  // redirect to the landing page, mailto:/tel: contact links — is handed to
+  // the default browser/external handler instead of navigating the window.
+  mainWindow.webContents.on('will-navigate', (event, url) => {
+    if (urlProtocol(url) === 'app:') return;
+    event.preventDefault();
+    if (isExternalUrl(url)) openExternal(url);
   });
 
   mainWindow.loadURL('app://localhost/');
