@@ -99,6 +99,26 @@ function createWindow() {
   });
 
   mainWindow.loadURL('app://localhost/');
+
+  // The application menu was removed above, which also drops its built-in
+  // reload accelerator; give F5 the browser behavior back. Modifier combos
+  // (e.g. Ctrl+F5, Shift+F5) are left untouched. Chromium reports a bare F5
+  // press as either 'keyDown' or 'rawKeyDown' depending on platform (F5
+  // emits no char event), so both types count as the reload trigger; 'keyUp'
+  // stays excluded so key release never re-triggers it.
+  mainWindow.webContents.on('before-input-event', (event, input) => {
+    if (
+      (input.type === 'keyDown' || input.type === 'rawKeyDown') &&
+      input.key === 'F5' &&
+      !input.control &&
+      !input.alt &&
+      !input.meta &&
+      !input.shift
+    ) {
+      event.preventDefault();
+      mainWindow.webContents.reload();
+    }
+  });
 }
 
 app.whenReady().then(() => {
