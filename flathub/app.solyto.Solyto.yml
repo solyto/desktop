@@ -58,6 +58,6 @@ modules:
       - type: git
         url: https://github.com/solyto/desktop.git
         tag: v1.0.13
-        # commit: <fill in the exact sha of tag v1.0.13 before opening the Flathub PR>
+        commit: a619e856309923461e0993b645b348d97d75c4f9
       - generated-sources.frontend.json
       - generated-sources.electron.json

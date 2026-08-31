@@ -54,28 +54,34 @@
   <url type="bugtracker">https://github.com/solyto/desktop/issues</url>
   <url type="vcs-browser">https://github.com/solyto/desktop</url>
 
-  <screenshots>
-    <screenshot type="default">
-      <image>https://raw.githubusercontent.com/solyto/desktop/main/flathub/screenshots/1.png</image>
-      <caption>The dashboard, combining every area of your data in one view</caption>
-    </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/solyto/desktop/main/flathub/screenshots/2.png</image>
-      <caption>Todos, created from a single line with short commands</caption>
-    </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/solyto/desktop/main/flathub/screenshots/3.png</image>
-      <caption>Calendar and contacts, kept in sync over DAV</caption>
-    </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/solyto/desktop/main/flathub/screenshots/4.png</image>
-      <caption>The notebook, with folders and a markdown editor</caption>
-    </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/solyto/desktop/main/flathub/screenshots/5.png</image>
-      <caption>Music, book and game libraries with release tracking</caption>
-    </screenshot>
-  </screenshots>
+  <!--
+    TODO before submitting to Flathub: screenshots are required. Add 5 PNGs to
+    flathub/screenshots/ (commit them so raw.githubusercontent.com URLs resolve),
+    then restore a <screenshots> block here, e.g.:
+
+    <screenshots>
+      <screenshot type="default">
+        <image>https://raw.githubusercontent.com/solyto/desktop/main/flathub/screenshots/1.png</image>
+        <caption>The dashboard, combining every area of your data in one view</caption>
+      </screenshot>
+      <screenshot>
+        <image>https://raw.githubusercontent.com/solyto/desktop/main/flathub/screenshots/2.png</image>
+        <caption>Todos, created from a single line with short commands</caption>
+      </screenshot>
+      <screenshot>
+        <image>https://raw.githubusercontent.com/solyto/desktop/main/flathub/screenshots/3.png</image>
+        <caption>Calendar and contacts, kept in sync over DAV</caption>
+      </screenshot>
+      <screenshot>
+        <image>https://raw.githubusercontent.com/solyto/desktop/main/flathub/screenshots/4.png</image>
+        <caption>The notebook, with folders and a markdown editor</caption>
+      </screenshot>
+      <screenshot>
+        <image>https://raw.githubusercontent.com/solyto/desktop/main/flathub/screenshots/5.png</image>
+        <caption>Music, book and game libraries with release tracking</caption>
+      </screenshot>
+    </screenshots>
+  -->
 
   <content_rating type="oars-1.1" />
 
