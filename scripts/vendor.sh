@@ -17,7 +17,6 @@ rsync -a --delete \
 echo "→ Applying desktop patches ..."
 # Electron loads a static (prerendered) build served over the app:// protocol.
 cp "$ROOT/patch/svelte.config.js" "$DEST/svelte.config.js"
-cp "$ROOT/patch/app.d.ts" "$DEST/src/app.d.ts"
 
 # Desktop-only build dependency: adapter-static produces the prerendered build.
 # Add it to the vendored package.json + lockfile (carried over from app) without

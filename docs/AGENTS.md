@@ -71,10 +71,12 @@ Two parts: the Electron shell at the repo root and the SPA in `frontend/`.
   auto-updater exposed over IPC. Under Flatpak (`FLATPAK_ID` set) the updater
   and protocol-client registration stay dormant.
 - `preload.js`: contextIsolation bridge exposing `window.electronAPI` (window
-  controls, updater); typed in `patch/app.d.ts`.
+  controls, updater); typed by the app itself (`ElectronAPI` in
+  `src/lib/types/platform.ts`).
 - `frontend/` is vendored from the canonical app repo (sibling `../app`) by
-  `scripts/vendor.sh`, which also copies the desktop overrides from `patch/`
-  over `frontend/svelte.config.js` and `frontend/src/app.d.ts`.
+  `scripts/vendor.sh`, which also copies the desktop override from `patch/`
+  over `frontend/svelte.config.js`. `releases/release.sh` runs it on every
+  release.
 - Frontend layout: `src/routes/` (feature pages per domain), `src/lib/state/`
   (`*.svelte.ts` Svelte 5 runes stores per domain: Todos, Notes, Finances,
   Auth, Theme, ...), `src/lib/services/` (`ApiService` — token-authenticated
@@ -117,8 +119,8 @@ Run at the repo root:
 - NEVER install packages without asking
 - NEVER edit generated output (`frontend/build/`, `dist/`, `node_modules/`) —
   regenerate it instead
-- NEVER edit `frontend/svelte.config.js` or `frontend/src/app.d.ts` — they are
-  overwritten from `patch/` on every vendor run; change them in `patch/`
+- NEVER edit `frontend/svelte.config.js` — it is overwritten from `patch/` on
+  every vendor run; change it in `patch/`
 - `frontend/` is re-synced from the canonical app repo at release time — say so
   before making sweeping frontend changes here
 - NEVER push, tag, run `make release`/`rerelease`, or touch/commit `.env`
