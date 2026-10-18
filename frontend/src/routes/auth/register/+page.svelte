@@ -89,7 +89,7 @@
 		<StaggeredLogo path="../" />
 	</div>
 	<form
-		class="mb-4 flex flex-col gap-4 rounded-lg border-2 border-white/5 bg-white px-8 pt-6 pb-8 shadow-sm md:min-w-80 dark:bg-s-dark-2"
+		class="mb-4 flex flex-col gap-4 rounded-lg border-2 border-white/5 bg-c-bg-surface px-8 pt-6 pb-8 shadow-sm md:min-w-80"
 		{onsubmit}
 	>
 		<label class="label">
@@ -137,7 +137,7 @@
 	</form>
 	<div class="flex items-center gap-2 text-sm text-c-neutral-5 dark:text-c-neutral-4">
 		<span>{ts.get.auth.have_account}</span>
-		<a href={urls.login} class="font-medium text-c-btn transition-colors hover:underline">
+		<a href={resolve(urls.login)} class="font-medium text-c-btn transition-colors hover:underline">
 			{ts.get.auth.sign_in}
 		</a>
 	</div>

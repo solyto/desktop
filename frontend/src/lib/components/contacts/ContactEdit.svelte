@@ -2,7 +2,8 @@
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import type { CreateContactForm, CreateContactRequest } from '$lib/types/contact';
+	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
+	import type { Contact, CreateContactForm, CreateContactRequest } from '$lib/types/contact';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import IconMapPinHouse from '@lucide/svelte/icons/map-pin-house';
 	import IconUser from '@lucide/svelte/icons/user';
@@ -23,8 +24,9 @@
 	const contacts = getContacts();
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
+	const notifications = getUiNotifications();
 
-	let loadedContactId = $state<string | null>(null);
+	const canSubmit = $derived(submittable());
 
 	const emptyForm: CreateContactForm = {
 		address_book_id: contacts.addressBooks[0].id,
@@ -45,37 +47,42 @@
 		postal_code: '',
 		country: ''
 	};
-	let form = $state<CreateContactForm>(emptyForm);
+	let form = $state<CreateContactForm>(
+		contacts.activeContact ? formFromContact(contacts.activeContact) : structuredClone(emptyForm)
+	);
 
-	$effect(() => {
-		if (contacts.activeContact && loadedContactId !== contacts.activeContact.uid) {
-			loadFormFromEntry();
-			loadedContactId = contacts.activeContact.uid;
-		}
-	});
+	function formFromContact(c: Contact): CreateContactForm {
+		return {
+			address_book_id: c.address_book_id,
+			first_name: c.first_name,
+			last_name: c.last_name,
+			middle_name: c.middle_name,
+			prefix: c.prefix,
+			suffix: c.suffix,
+			email: c.email ? [...c.email] : [],
+			phone: c.phone ? [...c.phone] : [],
+			groups: c.groups?.join(', ') || '',
+			organization: c.organization,
+			title: c.title,
+			note: c.note,
+			street: c.street,
+			city: c.city,
+			state: c.state,
+			postal_code: c.postal_code,
+			country: c.country
+		};
+	}
 
-	function loadFormFromEntry(): void {
-		const c = contacts.activeContact!;
-		form.address_book_id = c.address_book_id;
-		form.first_name = c.first_name;
-		form.last_name = c.last_name;
-		form.middle_name = c.middle_name;
-		form.prefix = c.prefix;
-		form.suffix = c.suffix;
-		form.groups = c.groups?.join(', ') || '';
-		form.organization = c.organization;
-		form.title = c.title;
-		form.note = c.note;
-		form.street = c.street;
-		form.city = c.city;
-		form.state = c.state;
-		form.postal_code = c.postal_code;
-		form.country = c.country;
-		form.phone = c.phone ? [...c.phone] : [];
-		form.email = c.email ? [...c.email] : [];
+	function submittable(): boolean {
+		return form.first_name.trim() !== '' && form.last_name.trim() !== '';
 	}
 
 	async function onsubmit(): Promise<void> {
+		if (!canSubmit) {
+			notifications.error(ts.get.contacts.name_required);
+			return;
+		}
+
 		loadingIndicator.start();
 		const request: CreateContactRequest = {
 			...form,
@@ -88,13 +95,17 @@
 					: null
 		};
 
-		if (contacts.activeContact) {
-			await contacts.update(contacts.activeContact, request);
-		} else {
-			await contacts.create(request);
-		}
+		const res = contacts.activeContact
+			? await contacts.update(contacts.activeContact, request)
+			: await contacts.create(request);
 
 		loadingIndicator.stop();
+
+		if (!res) {
+			notifications.error(ts.get.contacts.save_error);
+			return;
+		}
+
 		form = structuredClone(emptyForm);
 		contacts.closeCreateModal();
 	}
@@ -184,7 +195,7 @@
 			<TextInput placeholder="Notes" multiLine={true} height={80} bind:value={form.note} />
 		</div>
 		<div class="mt-8 flex w-full flex-row items-center justify-end">
-			<TextButton title={ts.get.layout.save} onclick={onsubmit} />
+			<TextButton title={ts.get.layout.save} onclick={onsubmit} disabled={!canSubmit} />
 		</div>
 	</div>
 </ContentModal>

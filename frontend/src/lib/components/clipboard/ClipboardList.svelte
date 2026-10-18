@@ -3,9 +3,11 @@
 	import IconClipboardCopy from '@lucide/svelte/icons/clipboard-copy';
 	import IconTrash from '@lucide/svelte/icons/trash-2';
 	import { formatDate } from '$lib/helpers/DateHelper';
+	import { truncate } from '$lib/helpers/FormatHelper';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import Heading from '$lib/components/ui/Heading.svelte';
 	import { API_USER_STORAGE_URL, apiRoutes } from '$lib/config/apiRoutes';
 	import type { ClipboardEntry } from '$lib/types/clipboard';
 
@@ -13,6 +15,8 @@
 	const ts = getTranslation();
 	const notifications = getUiNotifications();
 	const loadingIndicator = getLoadingIndicator();
+
+	const MAX_TEXT_PREVIEW_LENGTH = 200;
 
 	async function onCopyText(content: string): Promise<void> {
 		await navigator.clipboard.writeText(content);
@@ -47,7 +51,8 @@
 				canvas.getContext('2d')!.drawImage(img, 0, 0);
 				canvas.toBlob((result) => {
 					URL.revokeObjectURL(img.src);
-					result ? resolve(result) : reject();
+					if (result) resolve(result);
+				else reject();
 				}, 'image/png');
 			};
 			img.onerror = () => {
@@ -85,9 +90,7 @@
 {/snippet}
 
 <div class="flex w-full flex-col gap-4 md:w-1/2">
-	<h1 class="mb-4 text-xl font-bold text-c-heading dark:text-c-primary">
-		{ts.get.clipboard.history}
-	</h1>
+	<Heading title={ts.get.clipboard.history} my={0} mb={4} />
 	{#each clipboard.entries as entry (entry.id)}
 		{#if entry.type === 'image' && entry.file_path}
 			<div
@@ -114,7 +117,9 @@
 				<div class="absolute top-[-10px] right-[-10px]">
 					{@render actionButtons(entry)}
 				</div>
-				<p class="pr-16 text-sm">{entry.content}</p>
+				<p class="pr-16 text-sm break-words whitespace-pre-wrap">
+					{truncate(entry.content, MAX_TEXT_PREVIEW_LENGTH)}
+				</p>
 				<div class="mt-2 text-xs text-c-neutral-4">
 					{formatDate(entry.created_at)}
 				</div>

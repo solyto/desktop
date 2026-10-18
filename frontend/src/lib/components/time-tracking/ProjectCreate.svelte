@@ -5,15 +5,16 @@
 	import { getTimeTracking } from '$lib/state/TimeTracking.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getReadableTextColor } from '$lib/helpers/ColorHelper';
 
 	const tt = getTimeTracking();
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
 
-	let { onClose, projectId = null } = $props<{
+	let { onClose, projectId = null }: {
 		onClose: () => void;
 		projectId?: string | null;
-	}>();
+	} = $props();
 
 	const existingProject = projectId ? tt.projects.find((p) => p.id === projectId) : null;
 
@@ -41,8 +42,10 @@
 		selectedCategoryIds = selectedCategoryIds.filter((cid) => cid !== id);
 	}
 
+	let isValid = $derived(title.trim().length > 0);
+
 	async function onSave(): Promise<void> {
-		if (!title.trim()) return;
+		if (!isValid) return;
 
 		loadingIndicator.start();
 
@@ -72,18 +75,18 @@
 	{onClose}
 >
 	<div class="flex flex-col gap-3">
-		<div class="flex flex-col gap-1">
+		<label class="flex flex-col gap-1">
 			<span class="text-sm font-medium text-c-neutral-5 dark:text-c-neutral-4">
 				{ts.get.timeTracking.title}
 			</span>
 			<TextInput bind:value={title} placeholder={ts.get.timeTracking.title} />
-		</div>
-		<div class="flex flex-col gap-1">
+		</label>
+		<label class="flex flex-col gap-1">
 			<span class="text-sm font-medium text-c-neutral-5 dark:text-c-neutral-4">
 				{ts.get.timeTracking.description}
 			</span>
 			<TextInput bind:value={description} placeholder={ts.get.timeTracking.description} />
-		</div>
+		</label>
 		<div class="flex flex-col gap-1">
 			<span class="text-sm font-medium text-c-neutral-5 dark:text-c-neutral-4"
 				>{ts.get.timeTracking.categories}</span
@@ -91,12 +94,13 @@
 			<div class="flex flex-row flex-wrap items-center gap-1.5">
 				{#each selectedCategories as cat (cat.id)}
 					<span
-						class="flex flex-row items-center gap-1 rounded-md px-2 py-1 text-xs text-white"
-						style="background-color: {cat.color ?? '#888'}"
+						class="flex flex-row items-center gap-1 rounded-md px-2 py-1 text-xs"
+						style="background-color: {cat.color ?? 'var(--color-c-neutral-4)'}; color: {getReadableTextColor(cat.color ?? 'var(--color-c-neutral-4)')}"
 					>
 						{cat.title}
 						<button
-							class="cursor-pointer text-white/80 hover:text-white"
+							aria-label={ts.get.layout.remove}
+							class="cursor-pointer opacity-80 hover:opacity-100"
 							onclick={() => removeCategory(cat.id)}
 						>
 							&times;
@@ -106,13 +110,14 @@
 				{#if availableCategories.length > 0}
 					<div class="relative">
 						<button
+							aria-label={ts.get.timeTracking.add_category}
 							class="cursor-pointer rounded-md border-1 border-dashed border-c-neutral-3 px-2 py-1 text-xs text-c-neutral-5 transition-all hover:border-c-primary hover:text-c-primary dark:border-s-dark-3 dark:text-c-neutral-4"
 							onclick={() => (showCategoryDropdown = !showCategoryDropdown)}
 						>
 							+
 						</button>
 						{#if showCategoryDropdown}
-							<div class="absolute top-8 left-0 z-10 max-h-40 min-w-36 overflow-y-auto rounded-md border-1 border-c-neutral-2 bg-white shadow-md dark:border-s-dark-3 dark:bg-s-dark-2">
+							<div class="absolute top-8 left-0 z-10 max-h-40 min-w-36 overflow-y-auto rounded-md border-1 border-c-neutral-2 bg-c-bg-modal shadow-md dark:border-s-dark-3">
 								{#each availableCategories as cat (cat.id)}
 									<button
 										class="flex w-full cursor-pointer flex-row items-center gap-2 px-3 py-2 text-left text-sm transition-all hover:bg-c-neutral-1 dark:hover:bg-s-dark-3"
@@ -134,7 +139,7 @@
 			</div>
 		</div>
 		<div class="mt-4 flex w-full justify-end">
-			<TextButton title={ts.get.layout.save} onclick={onSave} />
+			<TextButton title={ts.get.layout.save} onclick={onSave} disabled={!isValid} />
 		</div>
 	</div>
 </ContentModal>

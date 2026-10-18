@@ -11,18 +11,14 @@
 	import IconGripVertical from '@lucide/svelte/icons/grip-vertical';
 	import type { Calendar } from '$lib/types/calendar';
 
-	let { onClose } = $props<{ onClose: () => void }>();
+	let { onClose }: { onClose: () => void } = $props();
 
 	const calendars = getCalendars();
 	const ts = getTranslation();
 
 	const flipDurationMs = 200;
-	let items = $state<Calendar[]>([]);
+	let items = $derived<Calendar[]>([...calendars.ownedCalendars, ...calendars.acceptedSharedCalendars]);
 	let dragDisabled = $state(true);
-
-	$effect(() => {
-		items = [...calendars.ownedCalendars, ...calendars.acceptedSharedCalendars];
-	});
 
 	function handleConsider(e: CustomEvent) {
 		items = e.detail.items;
@@ -38,7 +34,7 @@
 <div class="flex h-full w-full flex-col justify-center gap-2 p-4 max-lg:p-0">
 	<button
 		onclick={onClose}
-		class="cursor-pointer self-center rounded-full bg-c-neutral p-2 transition-all hover:bg-white dark:bg-s-dark-3 dark:hover:bg-s-dark-2 max-lg:hidden"
+		class="cursor-pointer self-center rounded-full bg-c-neutral p-2 transition-all hover:bg-c-bg-elevated dark:bg-s-dark-3 dark:hover:bg-s-dark-2 max-lg:hidden"
 	>
 		<IconChevronLeft class="h-6 w-6" />
 	</button>
@@ -68,7 +64,7 @@
 			<div class="flex items-center gap-1" animate:flip={{ duration: flipDurationMs }}>
 				<IconGripVertical
 					size={20}
-					class="shrink-0 cursor-grab text-c-neutral-3"
+					class="shrink-0 cursor-grab touch-none text-c-neutral-3"
 					onpointerdown={() => (dragDisabled = false)}
 					onpointerup={() => (dragDisabled = true)}
 				/>

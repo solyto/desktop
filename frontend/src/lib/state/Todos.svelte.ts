@@ -11,14 +11,17 @@ import type {
 	TodoFilterType,
 	TodoWorkspace,
 	CreateTodoCategoryRequest,
+	UpdateTodoCategoryRequest,
 	CreateTodoWorkspaceRequest,
 	UpdateTodoWorkspaceRequest,
 	UpdateTodoRequest,
 	CreateTodoSubtaskRequest,
 	TodoSubtask,
-	UpdateTodoSubtaskRequest
+	UpdateTodoSubtaskRequest,
+	TodoView
 } from '$lib/types/todo';
 import type { Tag } from '$lib/types/tag';
+import type { Auth } from '$lib/state/Auth.svelte';
 import { setContext, getContext } from 'svelte';
 import { getAuth } from '$lib/state/Auth.svelte';
 import { page } from '$app/state';
@@ -29,7 +32,6 @@ import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import TodoRelevanceService from '$lib/services/TodoRelevanceService';
 import LocalStorageService from '$lib/services/LocalStorageService';
-import { SvelteDate } from 'svelte/reactivity';
 
 export class Todos {
 	static readonly LS_HIDE_IT_KEY: string = 'todos_hideit';
@@ -43,22 +45,35 @@ export class Todos {
 	workspaces = $state<TodoWorkspace[]>([]);
 	activeWorkspace = $state<TodoWorkspace | null>(null);
 	activeFilters = $state<TodoFilter[]>([]);
-	view = $state<'list' | 'kanban' | 'overview' | 'card'>('list');
+	view = $state<TodoView>('list');
 	sortByScore = $state<boolean>(false);
 	todosScored = $state<boolean>(false);
 	hideItActive = $state<boolean>(false);
 	recentlyCreated = $state<string | null>(null);
+	createModalOpen = $state<boolean>(false);
+	settingsModalVisible = $state<boolean>(false);
+	editingTodoId = $state<string | null>(null);
+
+	editingTodo = $derived(this.todos.find((t) => t.id === this.editingTodoId) ?? null);
 	quickCreateOpen = $state<boolean>(false);
-	auth = getAuth();
+	auth: Auth;
 	apiService: ApiService;
-	localStorage = new LocalStorageService();
+	localStorage: LocalStorageService;
 	filterService = new TodoFilterService();
 	sortingService = new TodoSortingService();
 	groupingService = new TodoGroupingService();
 	relevanceService = new TodoRelevanceService();
 
-	constructor() {
-		this.apiService = new ApiService(this.auth.getToken());
+	constructor(
+		auth: Auth = getAuth(),
+		apiService: ApiService = auth.apiService,
+		localStorage: LocalStorageService = new LocalStorageService()
+	) {
+		this.auth = auth;
+		this.apiService = apiService;
+		this.localStorage = localStorage;
+
+		this.hideItActive = this.localStorage.getBool(Todos.LS_HIDE_IT_KEY) ?? false;
 	}
 
 	async load(): Promise<void> {
@@ -78,8 +93,12 @@ export class Todos {
 		}
 
 		this.groupByStatus();
-		await Promise.all([this.loadCategories(), this.loadWorkspaces()]);
-		this.loadHideIt();
+
+		try {
+			await Promise.all([this.loadCategories(), this.loadWorkspaces()]);
+		} finally {
+			this.loadHideIt();
+		}
 	}
 
 	async loadCategories(): Promise<void> {
@@ -90,16 +109,39 @@ export class Todos {
 		this.filteredCategories = this.categories;
 	}
 
-	async loadWorkspaces(): Promise<void> {
-		const res = await this.apiService.list(apiRoutes.todos.listWorkspaces);
+	async loadWorkspaces(retries: number = 1): Promise<void> {
+		const res = await this.apiService.list(apiRoutes.todos.listWorkspaces).catch(() => null);
 
 		if (res) {
 			this.workspaces = res.data as TodoWorkspace[];
+			return;
+		}
+
+		if (retries > 0) {
+			await this.loadWorkspaces(retries - 1);
 		}
 	}
 
-	changeView(view: 'list' | 'kanban' | 'overview' | 'card'): void {
+	changeView(view: TodoView): void {
 		this.view = view;
+	}
+
+	openEdit(todoId: string): void {
+		this.editingTodoId = todoId;
+		this.createModalOpen = true;
+	}
+
+	closeEdit(): void {
+		this.editingTodoId = null;
+		this.createModalOpen = false;
+	}
+
+	openSettingsModal(): void {
+		this.settingsModalVisible = true;
+	}
+
+	closeSettingsModal(): void {
+		this.settingsModalVisible = false;
 	}
 
 	toggleSortByScore(): void {
@@ -140,11 +182,17 @@ export class Todos {
 	}
 
 	useFilters(filters: TodoFilter[]): void {
+		this.activeFilters = filters;
 		this.filteredTodos = this.todos;
 
-		const visibilityThreshold = new SvelteDate();
+		const visibilityThreshold = new Date();
 		visibilityThreshold.setDate(visibilityThreshold.getDate() + 3);
-		this.filteredTodos = this.filteredTodos.filter((t) => !t.auto_generated || t.due_at === null || new SvelteDate(t.due_at) <= visibilityThreshold);
+		this.filteredTodos = this.filteredTodos.filter(
+			(t) =>
+				!t.auto_generated ||
+				t.due_at === null ||
+				new Date(t.due_at) <= visibilityThreshold
+		);
 
 		if (!filters.some((f) => f.type === 'status' && f.value === 'backlog')) {
 			this.filteredTodos = this.filterService.filterOutBacklog(this.filteredTodos);
@@ -166,7 +214,6 @@ export class Todos {
 			this.filteredTodos = this.filterService.filter(filter, this.filteredTodos);
 		}
 
-		this.activeFilters = filters;
 		this.filteredTodos = this.sortingService.sort(this.filteredTodos);
 		this.groupByStatus();
 	}
@@ -232,7 +279,8 @@ export class Todos {
 		}
 
 		if (this.activeFilters.some((f) => f.type === 'category')) {
-			request.category_id = this.activeFilters.find((f) => f.type === 'category')?.value as number;
+			request.category_id = this.activeFilters.find((f) => f.type === 'category')
+				?.value as number;
 		}
 
 		const res = await this.apiService.create(apiRoutes.todos.create, request);
@@ -263,6 +311,19 @@ export class Todos {
 		const res = await this.apiService.create(apiRoutes.todos.createCategory, request);
 		if (res) await this.loadCategories();
 		return res ? (res.data as TodoCategory) : null;
+	}
+
+	async updateCategory(
+		category: TodoCategory,
+		request: UpdateTodoCategoryRequest
+	): Promise<boolean> {
+		const res = await this.apiService.update(
+			apiRoutes.todos.updateCategory,
+			category.id,
+			request
+		);
+		if (res) await Promise.all([this.loadCategories(), this.loadWorkspaces()]);
+		return res;
 	}
 
 	async deleteCategory(category: TodoCategory): Promise<boolean> {

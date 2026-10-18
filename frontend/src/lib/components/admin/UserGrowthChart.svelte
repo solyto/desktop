@@ -149,7 +149,7 @@
 </script>
 
 <div
-	class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+	class="rounded-xl border border-c-neutral-1 bg-c-bg-surface p-6 shadow-sm dark:border-s-dark-3"
 >
 	<div class="mb-4 flex items-center justify-between">
 		<h3
@@ -162,7 +162,7 @@
 				<button
 					class="cursor-pointer rounded-lg px-3 py-1.5 text-xs font-medium transition-all"
 					class:bg-c-btn={groupBy === filter.key}
-					class:text-white={groupBy === filter.key}
+					class:text-c-btn-text={groupBy === filter.key}
 					class:bg-c-neutral-1={groupBy !== filter.key}
 					class:dark:bg-s-dark-3={groupBy !== filter.key}
 					onclick={() => (groupBy = filter.key)}
@@ -173,6 +173,11 @@
 		</div>
 	</div>
 	{#key groupBy}
-		<SmoothLineChart categories={growthData.categories} values={growthData.values} filled={true} />
+		<SmoothLineChart
+			categories={growthData.categories}
+			values={growthData.values}
+			filled={true}
+			color="var(--color-c-success)"
+		/>
 	{/key}
 </div>

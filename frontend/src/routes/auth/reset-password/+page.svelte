@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
 	import { urls, getDeepLinkUrl } from '$lib/config/urls';
@@ -69,7 +70,7 @@
 
 	{#if invalidLink || failed}
 		<div
-			class="mb-4 flex flex-col gap-4 rounded-lg border-2 border-white/5 bg-white px-8 pt-6 pb-8 shadow-sm md:min-w-80 dark:bg-s-dark-2"
+			class="mb-4 flex flex-col gap-4 rounded-lg border-2 border-white/5 bg-c-bg-surface px-8 pt-6 pb-8 shadow-sm md:min-w-80"
 			in:scale
 		>
 			<p class="text-sm dark:text-white">{ts.get.auth.reset_password_invalid}</p>
@@ -82,7 +83,7 @@
 		</div>
 	{:else if done}
 		<div
-			class="mb-4 flex flex-col gap-4 rounded-lg border-2 border-white/5 bg-white px-8 pt-6 pb-8 shadow-sm md:min-w-80 dark:bg-s-dark-2"
+			class="mb-4 flex flex-col gap-4 rounded-lg border-2 border-white/5 bg-c-bg-surface px-8 pt-6 pb-8 shadow-sm md:min-w-80"
 			in:scale
 		>
 			<p class="text-sm dark:text-white">{ts.get.auth.reset_password_success}</p>
@@ -90,7 +91,7 @@
 				<TextButton title={ts.get.auth.open_in_app} href={deepLinkUrl} align="center" class="w-full" />
 				<div class="flex justify-center">
 					<a
-						href={urls.login}
+						href={resolve(urls.login)}
 						class="text-xs text-c-neutral-5 transition-colors hover:text-c-btn dark:text-c-neutral-4 dark:hover:text-c-btn"
 					>
 						{ts.get.auth.sign_in}
@@ -102,7 +103,7 @@
 		</div>
 	{:else}
 		<form
-			class="mb-4 flex flex-col gap-4 rounded-lg border-2 border-white/5 bg-white px-8 pt-6 pb-8 shadow-sm md:min-w-80 dark:bg-s-dark-2"
+			class="mb-4 flex flex-col gap-4 rounded-lg border-2 border-white/5 bg-c-bg-surface px-8 pt-6 pb-8 shadow-sm md:min-w-80"
 			{onsubmit}
 		>
 			<p class="text-base font-bold dark:text-white">{ts.get.auth.reset_password_title}</p>

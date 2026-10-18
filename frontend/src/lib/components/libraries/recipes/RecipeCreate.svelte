@@ -22,7 +22,7 @@
 	import AddButton from '$lib/components/ui/buttons/AddButton.svelte';
 	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';
 	import ChefkochIcon from '$lib/assets/services/chefkoch_icon.png';
-	import { fade, scale, slide } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 
 	const ts = getTranslation();
 	const library = getRecipeLibrary();
@@ -252,7 +252,7 @@
 			<span class="text-sm font-bold">{ts.get.libraries.recipes.ingredients}</span>
 			<AddButton colorOnHover={true} onClick={addIngredient} />
 		</div>
-		{#if ingredients.length > 0}
+		{#if ingredients?.length > 0}
 			<div
 				class="flex flex-col gap-2 rounded-lg border border-c-neutral-2 p-3 dark:border-s-dark-3 shadow-xs"
 				in:fade
@@ -289,7 +289,7 @@
 			<span class="text-sm font-bold">{ts.get.libraries.recipes.steps}</span>
 			<AddButton colorOnHover={true} onClick={addStep} />
 		</div>
-		{#if steps.length > 0}
+		{#if steps?.length > 0}
 			<div
 				class="flex flex-col gap-2 rounded-lg border border-c-neutral-2 p-3 dark:border-s-dark-3 shadow-xs"
 				in:fade

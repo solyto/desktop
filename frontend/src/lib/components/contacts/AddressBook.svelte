@@ -10,9 +10,9 @@
 	const contacts = getContacts();
 	const loadingIndicator = getLoadingIndicator();
 
-	let { addressBook } = $props<{
+	let { addressBook }: {
 		addressBook: AddressBook;
-	}>();
+	} = $props();
 
 	let edit = $state<boolean>(false);
 	let hex = $state<string>(addressBook.color ?? 'var(--color-c-neutral-2)');
@@ -34,12 +34,12 @@
 <div
 	role="button"
 	tabindex="0"
-	class="group relative cursor-pointer touch-manipulation gap-2 rounded-sm bg-white p-8 font-bold drop-shadow-sm transition-all not-dark:border-1 not-dark:border-c-neutral-1 hover:bg-c-neutral max-md:w-full dark:bg-s-dark-3 dark:hover:bg-s-dark-2"
+	class="group relative cursor-pointer touch-manipulation gap-2 rounded-sm bg-c-bg-surface p-8 font-bold drop-shadow-sm transition-all not-dark:border-1 not-dark:border-c-neutral-1 hover:bg-c-neutral max-md:w-full dark:hover:bg-s-dark-2"
 	onclick={() => contacts.selectAddressBook(addressBook)}
 >
 	{addressBook.name}
 	<Badge
-		i={contacts.getAddressBookCount(addressBook.name)}
+		i={contacts.getAddressBookCount(addressBook.id)}
 		color={addressBook.color ?? 'var(--color-c-primary)'}
 		light={addressBook.color === 'var(--color-c-neutral-2)'}
 	/>

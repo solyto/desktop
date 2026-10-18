@@ -4,8 +4,11 @@
 	import { fade } from 'svelte/transition';
 	import IconSearch from '@lucide/svelte/icons/search';
 	import IconX from '@lucide/svelte/icons/x';
+	import TextInput from '$lib/components/forms/TextInput.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	const userManagement = getUserManagement();
+	const ts = getTranslation();
 
 	let searchQuery = $state('');
 	let filteredUsers = $derived(userManagement.filterUsers());
@@ -14,11 +17,10 @@
 <div class="flex flex-col gap-4">
 	<div class="relative">
 		<IconSearch class="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-c-neutral-4" />
-		<input
-			type="text"
-			placeholder="Search by name or email..."
-			class="w-full rounded-lg border border-c-neutral-2 bg-white py-2.5 pr-10 pl-10 text-c-neutral-9 placeholder-gray-400 focus:border-transparent focus:ring-2 focus:ring-c-btn-hover focus:outline-none dark:border-s-dark-3 dark:bg-s-dark-2 dark:text-white"
+		<TextInput
 			bind:value={userManagement.search}
+			placeholder={ts.get.admin.search_placeholder}
+			class="py-2.5 pr-10 pl-10"
 		/>
 		{#if searchQuery}
 			<button

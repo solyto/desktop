@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { scale, fade, blur } from 'svelte/transition';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
@@ -8,15 +8,15 @@
 	const ts = getTranslation(),
 		keyManager = getKeyManager();
 
-	let { action, onThisOccurrence, onAllOccurrences, onCancel } = $props<{
-		action: 'edit' | 'delete';
-		onThisOccurrence: () => void | Promise<any>;
-		onAllOccurrences: () => void | Promise<any>;
-		onCancel: () => any;
-	}>();
+	let { action, onThisOccurrence, onAllOccurrences, onCancel }: {
+		action: 'edit' | 'delete' | 'move';
+		onThisOccurrence: () => void;
+		onAllOccurrences: () => void;
+		onCancel: () => void;
+	} = $props();
 
 	let visible = $state<boolean>(false);
-	let keyHandlers = $state<{ [key: string]: string | null }>({ Escape: null });
+	let keyHandlers: { [key: string]: string | null } = { Escape: null };
 
 	onMount(() => {
 		setTimeout(() => {
@@ -52,12 +52,14 @@
 				{ts.get.calendar.recurring_event}
 			</div>
 			<div
-				class="w-96 rounded-2xl border-1 border-c-neutral-2 bg-white p-4 shadow-md dark:border-s-dark dark:bg-s-dark-2"
+				class="w-96 rounded-2xl border-1 border-c-neutral-2 bg-c-bg-modal p-4 shadow-md dark:border-s-dark"
 			>
 				<div class="mb-6 w-full text-sm text-c-neutral-5">
 					{action === 'edit'
 						? ts.get.calendar.recurring_edit_question
-						: ts.get.calendar.recurring_delete_question}
+						: action === 'move'
+							? ts.get.calendar.recurring_move_question
+							: ts.get.calendar.recurring_delete_question}
 				</div>
 				<div class="flex w-full flex-col gap-2">
 					<TextButton

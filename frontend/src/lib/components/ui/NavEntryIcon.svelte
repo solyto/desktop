@@ -12,8 +12,9 @@
 	import IconCalendar from '@lucide/svelte/icons/calendar';
 	import IconClipboardCopy from '@lucide/svelte/icons/clipboard-copy';
 	import IconContactRound from '@lucide/svelte/icons/contact-round';
+	import IconBell from '@lucide/svelte/icons/bell';
 
-	let { type } = $props<{ type: string }>();
+	let { type }: { type: string } = $props();
 </script>
 
 {#if type === 'home'}
@@ -40,6 +41,8 @@
 	<IconTimer />
 {:else if type === 'settings'}
 	<IconSettings />
+{:else if type === 'notifications'}
+	<IconBell />
 {:else if type === 'dev_requests'}
 	<IconBug />
 {/if}

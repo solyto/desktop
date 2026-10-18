@@ -8,32 +8,35 @@
 	import Search from '$lib/components/libraries/shared/Search.svelte';
 	import Recommender from '$lib/components/libraries/shared/Recommender.svelte';
 	import Filter from '$lib/components/libraries/filters/Filter.svelte';
-	import type { Library } from '$lib/types/library';
+	import type { FilterLibrary, GenreLibrary, Library } from '$lib/types/library';
+	import type { MusicLibrary } from '$lib/state/MusicLibrary.svelte';
+	import type { BookLibrary } from '$lib/state/BookLibrary.svelte';
+	import type { MovieLibrary } from '$lib/state/MovieLibrary.svelte';
 	import Releases from '$lib/components/libraries/shared/Releases.svelte';
 
-	let { library } = $props<{ library: Library }>();
+	let { library }: { library: Library } = $props();
 
 	const ts = getTranslation();
 </script>
 
-<div class="relative mb-4 w-full text-right">
+<div class="relative mb-4 w-full">
 	{#if library.config.hasViewSwitcher}
 		<ViewSwitcher {library} />
 	{/if}
 	<div class="ml-auto flex items-center justify-end gap-2">
 		{#if library.config.hasFilters}
-			<Filter {library} />
+			<Filter library={library as FilterLibrary} />
 		{/if}
 		<Search {library} />
 		{#if library.config.hasReleases}
-			<Releases {library} />
+			<Releases library={library as MusicLibrary | BookLibrary | MovieLibrary} />
 		{/if}
 		{#if library.config.hasRecommender}
-			<Recommender {library} />
+			<Recommender library={library as MusicLibrary | BookLibrary} />
 		{/if}
 		{#if library.config.hasGenres}
-			<TextButton title={ts.get.libraries.edit_genres} onclick={() => library.openGenreModal()} type="slight" class="max-md:hidden" />
-			<IconButton type="slight" onclick={() => library.openGenreModal()} class="md:hidden">
+			<TextButton title={ts.get.libraries.edit_genres} onclick={() => (library as GenreLibrary).openGenreModal()} type="slight" class="max-md:hidden" />
+			<IconButton type="slight" onclick={() => (library as GenreLibrary).openGenreModal()} class="md:hidden">
 				<IconTag />
 			</IconButton>
 		{/if}
@@ -42,5 +45,5 @@
 			<IconPlus />
 		</IconButton>
 	</div>
-	<div class="text-surface-300 mx-2 my-4 text-xs">{library.entries.length} entries</div>
+	<div class="text-surface-300 mx-2 my-4 text-right text-xs">{library.entries.length} entries</div>
 </div>

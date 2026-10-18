@@ -1,6 +1,7 @@
 import type { Tag } from './tag';
 
 export type TodoPriority = 'low' | 'medium' | 'high';
+export type TodoView = 'list' | 'kanban' | 'overview' | 'card' | 'grouped';
 export type TodoStatus = 'backlog' | 'pending' | 'in-progress' | 'waiting' | 'almost-done';
 export type TodoEffort = null | 'low' | 'medium' | 'high';
 export type TodoRecurrenceFrequency = 'daily' | 'weekly' | 'monthly' | 'yearly';
@@ -82,6 +83,10 @@ export interface TodoCategory {
 
 export interface CreateTodoCategoryRequest {
 	title: string;
+}
+
+export interface UpdateTodoCategoryRequest {
+	title?: string;
 }
 
 export interface TodoNavigationItem {

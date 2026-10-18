@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Card from '$lib/components/ui/Card.svelte';
+	import CardButton from '$lib/components/ui/CardButton.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import type { LibraryType } from '$lib/types/library';
 	import { goto } from '$app/navigation';
@@ -16,12 +16,12 @@
 			class="w-44 cursor-pointer max-sm:w-full"
 			onclick={() => {
 				setActiveLibrary(item.type);
+				// eslint-disable-next-line svelte/no-navigation-without-resolve -- route from the navigation list, resolve() rejects a plain string
 				goto(item.url);
 			}}
 		>
-			<Card
+			<CardButton
 				label={ts.get.libraries.navigation[item.type]}
-				fixedWidth={false}
 				icon={item.icon}
 			/>
 		</button>

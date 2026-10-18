@@ -4,7 +4,7 @@
 	import IconSearch from '@lucide/svelte/icons/search';
 	import { onDestroy, onMount, tick } from 'svelte';
 	import { getContacts } from '$lib/state/Contacts.svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 
 	const contacts = getContacts();
 	const keyManager = getKeyManager();
@@ -12,7 +12,7 @@
 	let searchVisible = $state(false);
 	let searchInput = $state<HTMLInputElement | null>(null);
 	let searchTerm = $state<string>('');
-	let keyHandlers = $state<{ [key: string]: string | null }>({ f: null, Escape: null });
+	let keyHandlers: { [key: string]: string | null } = { f: null, Escape: null };
 
 	onMount(() => {
 		keyHandlers.f = keyManager.registerKeyDown('f', toggleSearch, { withHelperKey: 'Control' });
@@ -45,7 +45,7 @@
 	<div class="absolute top-6 flex w-full justify-center">
 		<input
 			type="text"
-			class="w-0 rounded-xl border-1 border-c-neutral-2 bg-white text-xl transition-all duration-300 dark:bg-s-dark"
+			class="w-0 rounded-xl border-1 border-c-neutral-2 !bg-c-neutral/60 text-xl backdrop-blur-sm transition-all duration-300 dark:!bg-s-dark/80"
 			class:w-96={searchVisible}
 			in:fade
 			bind:this={searchInput}

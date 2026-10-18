@@ -69,7 +69,7 @@
 
 	{#if sent}
 		<div
-			class="mb-4 flex flex-col gap-4 rounded-lg border-2 border-white/5 bg-white px-8 pt-6 pb-8 shadow-sm md:min-w-80 dark:bg-s-dark-2"
+			class="mb-4 flex flex-col gap-4 rounded-lg border-2 border-white/5 bg-c-bg-surface px-8 pt-6 pb-8 shadow-sm md:min-w-80"
 			in:fade
 		>
 			<div>
@@ -97,7 +97,7 @@
 		</div>
 	{:else}
 		<form
-			class="mb-4 flex flex-col gap-4 rounded-lg border-2 border-white/5 bg-white px-8 pt-6 pb-8 shadow-sm md:min-w-80 dark:bg-s-dark-2"
+			class="mb-4 flex flex-col gap-4 rounded-lg border-2 border-white/5 bg-c-bg-surface px-8 pt-6 pb-8 shadow-sm md:min-w-80"
 			{onsubmit}
 		>
 			<div>
@@ -115,7 +115,7 @@
 				<TextButton title={ts.get.auth.forgot_password_send} class="w-full" />
 			</div>
 			<div class="flex justify-center pt-1">
-				<a href={urls.login} class="cursor-pointer text-xs text-gray-400 hover:text-gray-600 dark:text-white/50 dark:hover:text-white/80">
+				<a href={resolve(urls.login)} class="cursor-pointer text-xs text-gray-400 hover:text-gray-600 dark:text-white/50 dark:hover:text-white/80">
 					{ts.get.auth.login}
 				</a>
 			</div>
