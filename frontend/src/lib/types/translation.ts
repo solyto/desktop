@@ -60,7 +60,8 @@ export interface HomeRecords {
 	new_books: string;
 	recent_notes: string;
 	newest_links: string;
-	inspiration_empty_hint: string;
+	more_to_come: string;
+	more_to_come_desc: string;
 }
 
 export interface SettingsRecords {
@@ -133,7 +134,6 @@ export interface SettingsRecords {
 	passkey_last_used: string;
 	passkey_never_used: string;
 	passkey_no_passkeys: string;
-	change_password: string;
 	current_password: string;
 	new_password: string;
 	confirm_new_password: string;
@@ -143,6 +143,13 @@ export interface SettingsRecords {
 	new_password_same_as_current: string;
 	password_changed: string;
 	password_change_error: string;
+	delete_account: string;
+	delete_account_start: string;
+	delete_account_warning: string;
+	delete_account_submit: string;
+	delete_account_email_sent: string;
+	delete_account_request_error: string;
+	delete_account_super_admin: string;
 	no_tags: string;
 	theme: string;
 	animations: string;
@@ -230,6 +237,12 @@ export interface AuthRecords {
 	have_account: string;
 	open_in_app: string;
 	session_expired: string;
+	confirm_deletion_title: string;
+	confirm_deletion_warning: string;
+	confirm_deletion_submit: string;
+	confirm_deletion_success: string;
+	confirm_deletion_invalid: string;
+	confirm_deletion_error: string;
 }
 
 export interface TodoRecords {
@@ -239,6 +252,8 @@ export interface TodoRecords {
 	enter_todo: string;
 	no_todos: string;
 	no_todos_desc: string;
+	no_todos_yet: string;
+	no_todos_yet_desc: string;
 	tags: string;
 	tag: string;
 	tag_error: string;
@@ -392,6 +407,7 @@ export interface WidgetRecords {
 	random_quote: string;
 	shortcuts: string;
 	manage_shortcuts: string;
+	no_shortcuts_hint: string;
 	shortcut_title: string;
 	shortcut_url: string;
 	clock: string;
@@ -406,10 +422,12 @@ export interface WidgetRecords {
 
 export interface NoteRecords {
 	notebook: string;
-	welcome: string;
-	instruction: string;
+	no_notes: string;
+	no_notes_desc: string;
 	new_note: string;
 	new_folder: string;
+	no_folders: string;
+	no_folders_desc: string;
 	edit_folder: string;
 	delete_note: string;
 	delete_folder: string;
@@ -696,6 +714,9 @@ export interface LibraryRecords {
 	search: string;
 	import: string;
 	no_results: string;
+	no_results_desc: string;
+	no_entries: string;
+	no_entries_desc: string;
 }
 
 export interface DevRecords {
@@ -788,6 +809,10 @@ export interface FeedRecords {
 	browse_feeds_friends: string;
 	browse_feeds_friends_empty: string;
 	browse_feeds_subscribers: string;
+	no_feeds: string;
+	no_feeds_desc: string;
+	no_items: string;
+	no_items_desc: string;
 }
 
 export interface CalendarRecords {
@@ -912,6 +937,10 @@ export interface CalendarRecords {
 
 export interface ContactRecords {
 	add_contact: string;
+	no_contacts: string;
+	no_contacts_desc: string;
+	no_visible_contacts: string;
+	no_visible_contacts_desc: string;
 	address_books: string;
 	import_success: string;
 	import_error: string;
@@ -1076,6 +1105,7 @@ export interface TimeTrackingRecords {
 	stop_timer: string;
 	timer_running: string;
 	no_projects: string;
+	no_projects_desc: string;
 	no_entries: string;
 	no_description: string;
 	manual_entry: string;

@@ -128,7 +128,13 @@ const auth: AuthRecords = {
 	register_link: 'Crear cuenta',
 	have_account: '¿Ya tienes una cuenta?',
 	open_in_app: 'Abrir en la app',
-	session_expired: 'Tu sesión ha caducado. Vuelve a iniciar sesión.'
+	session_expired: 'Tu sesión ha caducado. Vuelve a iniciar sesión.',
+	confirm_deletion_title: 'Eliminar tu cuenta',
+	confirm_deletion_warning: 'Esto elimina de forma permanente la cuenta %s y todos sus datos. Esta acción no se puede deshacer.',
+	confirm_deletion_submit: 'Eliminar mi cuenta definitivamente',
+	confirm_deletion_success: 'Tu cuenta y todos sus datos han sido eliminados. ¡Adiós!',
+	confirm_deletion_invalid: 'Este enlace no es válido o ha caducado. Solicita uno nuevo en los ajustes de tu cuenta.',
+	confirm_deletion_error: 'No se pudo eliminar tu cuenta. Inténtalo de nuevo.'
 };
 
 const home: HomeRecords = {
@@ -145,7 +151,8 @@ const home: HomeRecords = {
 	new_books: 'Nuevos libros',
 	recent_notes: 'Notas recientes',
 	newest_links: 'Enlaces recientes',
-	inspiration_empty_hint: 'Añade notas, música, libros o enlaces para verlos aquí.'
+	more_to_come: 'Habrá más por aquí.',
+	more_to_come_desc: 'Cuanto más uses las distintas funciones, más aparecerá aquí.'
 };
 
 const settings: SettingsRecords = {
@@ -206,7 +213,7 @@ const settings: SettingsRecords = {
 	export_download_failed: 'La descarga ha fallado.',
 	export_expires_at: 'Expira el',
 	export_no_exports: 'Aún no hay exportaciones.',
-	security: 'Seguridad',
+	security: 'Cuenta y seguridad',
 	passkeys: 'Claves de acceso',
 	passkey_add: 'Añadir clave de acceso',
 	passkey_name_placeholder: 'p.ej. Mi MacBook',
@@ -219,7 +226,6 @@ const settings: SettingsRecords = {
 	passkey_last_used: 'Último uso',
 	passkey_never_used: 'Nunca utilizada',
 	passkey_no_passkeys: 'Aún no hay claves de acceso registradas.',
-	change_password: 'Cambiar contraseña',
 	current_password: 'Contraseña actual',
 	new_password: 'Nueva contraseña',
 	confirm_new_password: 'Confirmar nueva contraseña',
@@ -229,6 +235,13 @@ const settings: SettingsRecords = {
 	new_password_same_as_current: 'La nueva contraseña debe ser distinta de tu contraseña actual.',
 	password_changed: 'Contraseña cambiada. Vuelve a iniciar sesión con tu nueva contraseña.',
 	password_change_error: 'No se pudo cambiar la contraseña.',
+	delete_account: 'Eliminar cuenta',
+	delete_account_start: 'Eliminar mi cuenta',
+	delete_account_warning: 'Todos tus datos se eliminarán de forma permanente y no se podrán recuperar. Si quieres conservar algo, exporta tus datos primero. ¿Quieres continuar?',
+	delete_account_submit: 'Enviar correo de confirmación',
+	delete_account_email_sent: 'Hemos enviado un enlace de confirmación a %s. Tu cuenta solo se eliminará cuando abras el enlace y confirmes. El enlace caduca en 60 minutos.',
+	delete_account_request_error: 'No se pudo solicitar la eliminación de la cuenta. Inténtalo de nuevo más tarde.',
+	delete_account_super_admin: 'Los superadministradores no pueden eliminar su propia cuenta.',
 	no_tags: 'Aún no tienes etiquetas.',
 	theme: 'Tema',
 	animations: 'Animaciones',
@@ -268,7 +281,9 @@ const todos: TodoRecords = {
 	title: 'Título',
 	enter_todo: 'Ingrese una tarea',
 	no_todos: 'No se encontraron tareas.',
-	no_todos_desc: 'Presione Enter para agregar una.',
+	no_todos_desc: 'Prueba otro filtro o espacio de trabajo.',
+	no_todos_yet: 'Aún no hay tareas.',
+	no_todos_yet_desc: 'Añade la primera con el botón «Nueva tarea».',
 	tags: 'Etiquetas',
 	tag: 'Etiqueta',
 	tag_error: 'La etiqueta no existe',
@@ -413,6 +428,7 @@ const widgets: WidgetRecords = {
 	random_quote: 'Cita aleatoria',
 	shortcuts: 'Accesos directos',
 	manage_shortcuts: 'Administrar accesos directos',
+	no_shortcuts_hint: 'Los accesos directos son enlaces rápidos a tus sitios web favoritos. Usa el lápiz para añadir el primero.',
 	shortcut_title: 'Título',
 	shortcut_url: 'URL',
 	clock: 'Reloj',
@@ -427,10 +443,12 @@ const widgets: WidgetRecords = {
 
 const notes: NoteRecords = {
 	notebook: 'Bloc de notas',
-	welcome: 'Bienvenido a su bloc de notas.',
-	instruction: 'Comience creando una nueva nota o seleccionando una existente.',
+	no_notes: 'Aún no hay notas.',
+	no_notes_desc: 'Añade la primera con el botón «Nueva nota».',
 	new_note: 'Nueva nota',
 	new_folder: 'Nueva carpeta',
+	no_folders: 'Aún no hay carpetas.',
+	no_folders_desc: 'Crea una con el botón de carpeta.',
 	delete_note: 'Eliminar nota',
 	delete_folder: 'Eliminar carpeta',
 	edit_folder: 'Cambiar nombre de carpeta',
@@ -715,7 +733,10 @@ const libraries: LibraryRecords = {
 	show_on: 'Ver en %s',
 	search: 'Buscar',
 	import: 'Importar',
-	no_results: 'No se encontraron resultados.'
+	no_results: 'No se encontraron resultados.',
+	no_results_desc: 'Prueba otra búsqueda o quita los filtros.',
+	no_entries: 'Aún no hay nada aquí.',
+	no_entries_desc: 'Añade tu primera entrada con el botón más.'
 };
 
 const dev: DevRecords = {
@@ -807,7 +828,11 @@ const feeds: FeedRecords = {
 	browse_feeds_empty: 'No se encontraron feeds.',
 	browse_feeds_friends: 'Suscritos por tus amigos',
 	browse_feeds_friends_empty: 'Tus amigos aún no se han suscrito a ningún feed.',
-	browse_feeds_subscribers: 'suscriptores'
+	browse_feeds_subscribers: 'suscriptores',
+	no_feeds: 'Aún no hay feeds.',
+	no_feeds_desc: 'Añade un feed o explora lo que leen los demás.',
+	no_items: 'Aún no hay nada aquí.',
+	no_items_desc: 'Las nuevas entradas aparecerán en cuanto este feed las publique.'
 };
 
 const calendar: CalendarRecords = {
@@ -929,6 +954,10 @@ const calendar: CalendarRecords = {
 
 const contacts: ContactRecords = {
 	add_contact: 'Agregar contacto',
+	no_contacts: 'Aún no hay contactos.',
+	no_contacts_desc: 'Añade un contacto o importa una libreta de direcciones.',
+	no_visible_contacts: 'No hay contactos que mostrar.',
+	no_visible_contacts_desc: 'Elige otra libreta de direcciones o muestra las ocultas.',
 	address_books: 'Libretas de direcciones',
 	import_success: 'Las libretas de direcciones se importaron correctamente.',
 	import_error: 'Hubo un error al importar las libretas de direcciones.',
@@ -1189,6 +1218,7 @@ const timeTracking: TimeTrackingRecords = {
 	stop_timer: 'Detener temporizador',
 	timer_running: 'Temporizador en marcha',
 	no_projects: 'Aún no hay proyectos.',
+	no_projects_desc: 'Crea un proyecto para empezar a registrar tiempo.',
 	no_entries: 'Aún no hay entradas.',
 	no_description: 'Sin descripción',
 	manual_entry: 'Entrada manual',

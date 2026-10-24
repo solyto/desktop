@@ -29,6 +29,9 @@
 
 	/* Semantic color tokens */
 	--color-c-primary: #a09880;
+	--color-c-primary-text: #0e0e12;
+	--color-c-primary-text-hover: #0e0e12;
+	--color-c-flag-text: #0e0e12;
 	--color-c-heading: #d4cdb8;
 	--color-c-heading-base: #e8e4dc;
 	--color-c-btn: #2a2830;
@@ -69,6 +72,7 @@
 	--color-c-neutral-7: #b8b0c0;
 	--color-c-neutral-8: #ccc4d0;
 	--color-c-neutral-9: #e0d8e8;
+	--color-c-avatar-text: #e0d8e8;
 
 	/* Override light-blue utility colors used for borders and subtle backgrounds */
 	--color-d-lightblue: transparent;
@@ -91,6 +95,10 @@ html.dark {
 body {
 	background-image: url('./wallpaper.jpg');
 	background-size: cover;
+	/* The page can end a fraction of a pixel above the viewport bottom; don't let the */
+	/* wallpaper's light top edge repeat into that strip. #10100c is its bottom edge.  */
+	background-repeat: no-repeat;
+	background-color: #10100c;
 }
 
 .page-container {
@@ -119,6 +127,14 @@ body {
 
 .nav-mobile {
 	background: none !important;
+}
+
+/* Icon of the current page shown on the mobile overflow button: solid, without */
+/* a border and without the default light glow.                                 */
+.nav-overflow-active {
+	--tw-shadow: 0 0 #0000;
+	background-color: #0e0e12;
+	color: var(--color-c-nav-active-text);
 }
 
 /* Secondary navigation overlays (mobile hamburger/funnel menus) — opaque so   */

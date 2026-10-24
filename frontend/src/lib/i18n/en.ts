@@ -128,7 +128,13 @@ const auth: AuthRecords = {
 	register_link: 'Create account',
 	have_account: 'Already have an account?',
 	open_in_app: 'Open in App',
-	session_expired: 'Your session expired. Please sign in again.'
+	session_expired: 'Your session expired. Please sign in again.',
+	confirm_deletion_title: 'Delete your account',
+	confirm_deletion_warning: 'This permanently deletes the account %s and all of its data. This cannot be undone.',
+	confirm_deletion_submit: 'Delete my account permanently',
+	confirm_deletion_success: 'Your account and all of its data have been deleted. Goodbye!',
+	confirm_deletion_invalid: 'This link is invalid or has expired. Request a new one in your account settings.',
+	confirm_deletion_error: 'Your account could not be deleted. Please try again.'
 };
 
 const home: HomeRecords = {
@@ -145,7 +151,8 @@ const home: HomeRecords = {
 	new_books: 'New Books',
 	recent_notes: 'Recent Notes',
 	newest_links: 'Newest Links',
-	inspiration_empty_hint: 'Add notes, music, books, or links to see them here.'
+	more_to_come: 'More to come.',
+	more_to_come_desc: 'The more you use the different features, the more shows up here.'
 };
 
 const settings: SettingsRecords = {
@@ -206,7 +213,7 @@ const settings: SettingsRecords = {
 	export_download_failed: 'Download failed.',
 	export_expires_at: 'Expires at',
 	export_no_exports: 'No exports yet.',
-	security: 'Security',
+	security: 'Account & Security',
 	passkeys: 'Passkeys',
 	passkey_add: 'Add Passkey',
 	passkey_name_placeholder: 'e.g. My MacBook',
@@ -219,7 +226,6 @@ const settings: SettingsRecords = {
 	passkey_last_used: 'Last used',
 	passkey_never_used: 'Never used',
 	passkey_no_passkeys: 'No passkeys registered yet.',
-	change_password: 'Change password',
 	current_password: 'Current password',
 	new_password: 'New password',
 	confirm_new_password: 'Confirm new password',
@@ -229,6 +235,13 @@ const settings: SettingsRecords = {
 	new_password_same_as_current: 'The new password must be different from your current password.',
 	password_changed: 'Password changed. Please sign in again with your new password.',
 	password_change_error: 'Failed to change password.',
+	delete_account: 'Delete account',
+	delete_account_start: 'Delete my account',
+	delete_account_warning: 'All of your data will be permanently deleted and cannot be restored. If you want to keep anything, export your data first. Do you want to continue?',
+	delete_account_submit: 'Send confirmation email',
+	delete_account_email_sent: 'We sent a confirmation link to %s. Your account will only be deleted after you open the link and confirm. The link expires in 60 minutes.',
+	delete_account_request_error: 'Account deletion could not be requested. Please try again later.',
+	delete_account_super_admin: 'Super administrators cannot delete their own account.',
 	no_tags: 'You have no tags yet.',
 	theme: 'Theme',
 	animations: 'Animations',
@@ -268,7 +281,9 @@ const todos: TodoRecords = {
 	title: 'Title',
 	enter_todo: 'Enter Todo',
 	no_todos: 'No Todos found.',
-	no_todos_desc: 'Press Enter to add one.',
+	no_todos_desc: 'Try another filter or workspace.',
+	no_todos_yet: 'No todos yet.',
+	no_todos_yet_desc: 'Add your first one with the New Todo button.',
 	tags: 'Tags',
 	tag: 'Tag',
 	tag_error: 'Tag does not exist',
@@ -413,6 +428,7 @@ const widgets: WidgetRecords = {
 	random_quote: 'Random Quote',
 	shortcuts: 'Shortcuts',
 	manage_shortcuts: 'Manage Shortcuts',
+	no_shortcuts_hint: 'Shortcuts are quick links to your favorite websites. Use the pen to add your first one.',
 	shortcut_title: 'Title',
 	shortcut_url: 'URL',
 	clock: 'Clock',
@@ -427,10 +443,12 @@ const widgets: WidgetRecords = {
 
 const notes: NoteRecords = {
 	notebook: 'Notebook',
-	welcome: 'Welcome to your notebook.',
-	instruction: 'Start by creating a new note or selecting one.',
+	no_notes: 'No notes yet.',
+	no_notes_desc: 'Add your first one with the New Note button.',
 	new_note: 'New Note',
 	new_folder: 'New Folder',
+	no_folders: 'No folders yet.',
+	no_folders_desc: 'Create one with the folder button.',
 	delete_note: 'Delete Note',
 	delete_folder: 'Delete Folder',
 	edit_folder: 'Change Folder Name',
@@ -715,7 +733,10 @@ const libraries: LibraryRecords = {
 	show_on: 'Show on %s',
 	search: 'Search',
 	import: 'Import',
-	no_results: 'No results found.'
+	no_results: 'No results found.',
+	no_results_desc: 'Try a different search or clear the filters.',
+	no_entries: 'Nothing here yet.',
+	no_entries_desc: 'Add your first entry with the plus button.'
 };
 
 const dev: DevRecords = {
@@ -807,7 +828,11 @@ const feeds: FeedRecords = {
 	browse_feeds_empty: 'No feeds found.',
 	browse_feeds_friends: 'Subscribed to by your friends',
 	browse_feeds_friends_empty: 'Your friends have not subscribed to any feeds yet.',
-	browse_feeds_subscribers: 'subscribers'
+	browse_feeds_subscribers: 'subscribers',
+	no_feeds: 'No feeds yet.',
+	no_feeds_desc: 'Add a feed or browse what others are reading.',
+	no_items: 'Nothing here yet.',
+	no_items_desc: 'New entries show up as soon as this feed publishes them.'
 };
 
 const calendar: CalendarRecords = {
@@ -929,6 +954,10 @@ const calendar: CalendarRecords = {
 
 const contacts: ContactRecords = {
 	add_contact: 'Add Contact',
+	no_contacts: 'No contacts yet.',
+	no_contacts_desc: 'Add a contact or import an address book.',
+	no_visible_contacts: 'No contacts to show.',
+	no_visible_contacts_desc: 'Pick another address book or show the hidden ones.',
 	address_books: 'Address Books',
 	import_success: 'Address Books were successfully imported.',
 	import_error: 'There was an error when importing Address Books.',
@@ -1189,6 +1218,7 @@ const timeTracking: TimeTrackingRecords = {
 	stop_timer: 'Stop Timer',
 	timer_running: 'Timer Running',
 	no_projects: 'No projects yet.',
+	no_projects_desc: 'Create a project to start tracking time.',
 	no_entries: 'No entries yet.',
 	no_description: 'No description',
 	manual_entry: 'Manual Entry',

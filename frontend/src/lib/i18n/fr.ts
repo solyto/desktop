@@ -128,7 +128,13 @@ const auth: AuthRecords = {
 	register_link: 'Créer un compte',
 	have_account: 'Déjà un compte ?',
 	open_in_app: "Ouvrir dans l'application",
-	session_expired: 'Votre session a expiré. Veuillez vous reconnecter.'
+	session_expired: 'Votre session a expiré. Veuillez vous reconnecter.',
+	confirm_deletion_title: 'Supprimer ton compte',
+	confirm_deletion_warning: 'Cette action supprime définitivement le compte %s et toutes ses données. Elle est irréversible.',
+	confirm_deletion_submit: 'Supprimer mon compte définitivement',
+	confirm_deletion_success: 'Ton compte et toutes ses données ont été supprimés. Au revoir !',
+	confirm_deletion_invalid: 'Ce lien est invalide ou a expiré. Demandes-en un nouveau dans les paramètres de ton compte.',
+	confirm_deletion_error: 'Ton compte n\'a pas pu être supprimé. Réessaie.'
 };
 
 const home: HomeRecords = {
@@ -145,7 +151,8 @@ const home: HomeRecords = {
 	new_books: 'Nouveaux livres',
 	recent_notes: 'Notes récentes',
 	newest_links: 'Liens récents',
-	inspiration_empty_hint: 'Ajoute des notes, de la musique, des livres ou des liens pour les voir ici.'
+	more_to_come: 'Il y aura plus ici.',
+	more_to_come_desc: 'Plus tu utilises les différentes fonctions, plus il y aura de choses ici.'
 };
 
 const settings: SettingsRecords = {
@@ -205,7 +212,7 @@ const settings: SettingsRecords = {
 	export_download_failed: 'Le téléchargement a échoué.',
 	export_expires_at: 'Expire le',
 	export_no_exports: 'Aucun export pour l\'instant.',
-	security: 'Sécurité',
+	security: 'Compte et sécurité',
 	passkeys: 'Clés d\'accès',
 	passkey_add: 'Ajouter une clé d\'accès',
 	passkey_name_placeholder: 'ex. Mon MacBook',
@@ -218,7 +225,6 @@ const settings: SettingsRecords = {
 	passkey_last_used: 'Dernière utilisation',
 	passkey_never_used: 'Jamais utilisée',
 	passkey_no_passkeys: 'Aucune clé d\'accès enregistrée pour l\'instant.',
-	change_password: 'Changer le mot de passe',
 	current_password: 'Mot de passe actuel',
 	new_password: 'Nouveau mot de passe',
 	confirm_new_password: 'Confirmer le nouveau mot de passe',
@@ -228,6 +234,13 @@ const settings: SettingsRecords = {
 	new_password_same_as_current: 'Le nouveau mot de passe doit être différent de votre mot de passe actuel.',
 	password_changed: 'Mot de passe modifié. Veuillez vous reconnecter avec votre nouveau mot de passe.',
 	password_change_error: 'Impossible de changer le mot de passe.',
+	delete_account: 'Supprimer le compte',
+	delete_account_start: 'Supprimer mon compte',
+	delete_account_warning: 'Toutes tes données seront définitivement supprimées et ne pourront pas être restaurées. Si tu veux conserver quelque chose, exporte d\'abord tes données. Veux-tu continuer ?',
+	delete_account_submit: 'Envoyer l\'e-mail de confirmation',
+	delete_account_email_sent: 'Nous avons envoyé un lien de confirmation à %s. Ton compte ne sera supprimé qu\'après avoir ouvert le lien et confirmé. Le lien expire dans 60 minutes.',
+	delete_account_request_error: 'La suppression du compte n\'a pas pu être demandée. Réessaie plus tard.',
+	delete_account_super_admin: 'Les super-administrateurs ne peuvent pas supprimer leur propre compte.',
 	no_tags: 'Vous n\'avez pas encore de tags.',
 	theme: 'Thème',
 	animations: 'Animations',
@@ -267,7 +280,9 @@ const todos: TodoRecords = {
 	title: 'Titre',
 	enter_todo: 'Entrer une tâche',
 	no_todos: 'Aucune tâche trouvée.',
-	no_todos_desc: 'Appuie sur Entrée pour en ajouter une.',
+	no_todos_desc: 'Essaie un autre filtre ou espace de travail.',
+	no_todos_yet: 'Pas encore de tâches.',
+	no_todos_yet_desc: 'Ajoute la première avec le bouton « Nouvelle tâche ».',
 	tags: 'Tags',
 	tag: 'Tag',
 	tag_error: 'Le tag n\'existe pas',
@@ -412,6 +427,7 @@ const widgets: WidgetRecords = {
 	random_quote: 'Citation aléatoire',
 	shortcuts: 'Raccourcis',
 	manage_shortcuts: 'Gérer les raccourcis',
+	no_shortcuts_hint: 'Les raccourcis sont des liens rapides vers tes sites web préférés. Utilise le stylo pour ajouter le premier.',
 	shortcut_title: 'Titre',
 	shortcut_url: 'URL',
 	clock: 'Horloge',
@@ -426,10 +442,12 @@ const widgets: WidgetRecords = {
 
 const notes: NoteRecords = {
 	notebook: 'Bloc-notes',
-	welcome: 'Bienvenue dans ton bloc-notes.',
-	instruction: 'Commence par créer une nouvelle note ou en sélectionner une.',
+	no_notes: 'Pas encore de notes.',
+	no_notes_desc: 'Ajoute la première avec le bouton « Nouvelle note ».',
 	new_note: 'Nouvelle note',
 	new_folder: 'Nouveau dossier',
+	no_folders: 'Pas encore de dossiers.',
+	no_folders_desc: 'Crée-en un avec le bouton dossier.',
 	delete_note: 'Supprimer la note',
 	delete_folder: 'Supprimer le dossier',
 	edit_folder: 'Renommer le dossier',
@@ -714,7 +732,10 @@ const libraries: LibraryRecords = {
 	show_on: 'Afficher sur %s',
 	search: 'Rechercher',
 	import: 'Importer',
-	no_results: 'Aucun résultat trouvé.'
+	no_results: 'Aucun résultat trouvé.',
+	no_results_desc: 'Essaie une autre recherche ou retire les filtres.',
+	no_entries: 'Rien ici pour le moment.',
+	no_entries_desc: 'Ajoute ta première entrée avec le bouton plus.'
 };
 
 const dev: DevRecords = {
@@ -806,7 +827,11 @@ const feeds: FeedRecords = {
 	browse_feeds_empty: 'Aucun flux trouvé.',
 	browse_feeds_friends: 'Abonnements de tes amis',
 	browse_feeds_friends_empty: 'Tes amis ne se sont pas encore abonnés à des flux.',
-	browse_feeds_subscribers: 'abonnés'
+	browse_feeds_subscribers: 'abonnés',
+	no_feeds: 'Pas encore de flux.',
+	no_feeds_desc: 'Ajoute un flux ou découvre ce que les autres lisent.',
+	no_items: 'Rien ici pour le moment.',
+	no_items_desc: 'Les nouvelles entrées apparaîtront dès que ce flux les publiera.'
 };
 
 const calendar: CalendarRecords = {
@@ -930,6 +955,10 @@ const calendar: CalendarRecords = {
 
 const contacts: ContactRecords = {
 	add_contact: 'Ajouter un contact',
+	no_contacts: 'Pas encore de contacts.',
+	no_contacts_desc: 'Ajoute un contact ou importe un carnet d\'adresses.',
+	no_visible_contacts: 'Aucun contact à afficher.',
+	no_visible_contacts_desc: 'Choisis un autre carnet d\'adresses ou affiche ceux qui sont masqués.',
 	address_books: 'Carnets d\'adresses',
 	import_success: 'Les carnets d\'adresses ont été importés avec succès.',
 	import_error: 'Une erreur est survenue lors de l\'importation des carnets d\'adresses.',
@@ -1190,6 +1219,7 @@ const timeTracking: TimeTrackingRecords = {
 	stop_timer: 'Arrêter le chrono',
 	timer_running: 'Chrono en cours',
 	no_projects: 'Aucun projet pour le moment.',
+	no_projects_desc: 'Crée un projet pour commencer à suivre ton temps.',
 	no_entries: 'Aucune entrée pour le moment.',
 	no_description: 'Aucune description',
 	manual_entry: 'Entrée manuelle',
