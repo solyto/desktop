@@ -18,7 +18,9 @@
 		{ value: 'en', label: ts.get.settings.english },
 		{ value: 'de', label: ts.get.settings.german },
 		{ value: 'fr', label: ts.get.settings.french },
-		{ value: 'es', label: ts.get.settings.spanish }
+		{ value: 'es', label: ts.get.settings.spanish },
+		{ value: 'it', label: ts.get.settings.italian },
+		{ value: 'ru', label: ts.get.settings.russian }
 	];
 
 	const dateFormats = [
@@ -27,7 +29,9 @@
 		{ value: 'YYYY/mm/dd', label: 'YYYY/mm/dd (2025/12/31)' },
 		{ value: 'YY/mm/dd', label: 'YY/mm/dd (25/12/31)' },
 		{ value: 'YYYY-mm-dd', label: 'YYYY-mm-dd (2025-12-31)' },
-		{ value: 'YY-mm-dd', label: 'YY-mm-dd (25-12-31)' }
+		{ value: 'YY-mm-dd', label: 'YY-mm-dd (25-12-31)' },
+		{ value: 'mm/dd/YYYY', label: 'mm/dd/YYYY (12/31/2025)' },
+		{ value: 'mm/dd/YY', label: 'mm/dd/YY (12/31/25)' }
 	];
 
 	const timeFormats = [
@@ -66,7 +70,7 @@
 			<span class="mb-2 block text-sm font-medium text-c-neutral-7 dark:text-c-neutral-3">
 				{ts.get.settings.language}
 			</span>
-			<div class="grid grid-cols-4 gap-2">
+			<div class="grid grid-cols-3 gap-2">
 				{#each languages as lang (lang.value)}
 					<button
 						class="cursor-pointer rounded-lg border-2 px-3 py-2 text-sm font-medium transition-all

@@ -4,16 +4,18 @@
 	import IconPlus from '@lucide/svelte/icons/plus';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import { isDateToday, formatDate, formatTime } from '$lib/helpers/DateHelper';
+	import { isDateToday, formatDate, formatTime, getWeekdayOrder } from '$lib/helpers/DateHelper';
+	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getEventBackgroundColor, getEventBorderColor } from '$lib/helpers/ColorHelper';
-	import { getCalendarEventKey } from '$lib/helpers/CalendarEventHelper';
+	import { getCalendarEventKey, startsOnDate } from '$lib/helpers/CalendarEventHelper';
 	import { SwipeNavigate } from '$lib/helpers/SwipeNavigate.svelte';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
 	import CalendarMarks from '$lib/components/calendars/CalendarMarks.svelte';
 
 	const calendars = getCalendars();
 	const ts = getTranslation();
-	const weekdays = Array.from({ length: 7 }, (_, i) => i + 1);
+	const auth = getAuth();
+	const weekdays = getWeekdayOrder(auth.getWeekStart());
 
 	const swipe = new SwipeNavigate({
 		onLeft: () => calendars.nextMonth(),
@@ -172,9 +174,11 @@
 							onclick={async () => await calendars.showSidebar(null, item)}
 							transition:blur
 						>
-							<span class="mr-3 font-medium text-c-heading dark:text-c-primary"
-								>{formatTime(item.start_date)}</span
-							>
+							{#if startsOnDate(item, calendars.mobileSelectedDate)}
+								<span class="mr-3 font-medium text-c-heading dark:text-c-primary"
+									>{formatTime(item.start_date)}</span
+								>
+							{/if}
 							<span class="text-left">{item.title}</span>
 						</button>
 					{/if}

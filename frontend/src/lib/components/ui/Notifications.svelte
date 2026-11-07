@@ -13,7 +13,7 @@
 	let queue = $derived(notifications.queue);
 </script>
 
-<div class="fixed top-5 right-5 z-90 flex flex-col gap-2">
+<div class="fixed inset-x-4 top-4 z-90 flex flex-col gap-2 2xl:inset-x-auto 2xl:top-5 2xl:right-5">
 	{#each queue as notification (notification.id)}
 		<div
 			class="notification-toast flex h-full w-full flex-row gap-2 bg-c-neutral/60 border-l-3 rounded-md p-4 drop-shadow-lg backdrop-blur-sm 2xl:min-w-60 dark:bg-s-dark/80"
@@ -32,13 +32,13 @@
 			)}
 		>
 			{#if notification.type === 'info'}
-				<IconInfo class="text-c-btn-hover" />
+				<IconInfo class="mt-0.5 shrink-0 text-c-btn-hover" />
 			{:else if notification.type === 'success'}
-				<IconCheck class="text-c-success" />
+				<IconCheck class="mt-0.5 shrink-0 text-c-success" />
 			{:else if notification.type === 'error'}
-				<IconOctagonX class="text-c-danger" />
+				<IconOctagonX class="mt-0.5 shrink-0 text-c-danger" />
 			{:else if notification.type === 'warning'}
-				<IconTriangleAlert class="text-c-action" />
+				<IconTriangleAlert class="mt-0.5 shrink-0 text-c-action" />
 			{/if}
 			<p>{notification.message}</p>
 		</div>

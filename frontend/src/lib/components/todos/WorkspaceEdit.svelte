@@ -7,6 +7,7 @@
 	import FindCategoryMenu from '$lib/components/todos/FindCategoryMenu.svelte';
 	import Toggle from '$lib/components/forms/Toggle.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
+	import ConfirmationModal from '$lib/components/ui/ConfirmationModal.svelte';
 	import IconX from '@lucide/svelte/icons/x';
 
 	const ts = getTranslation();
@@ -16,9 +17,20 @@
 	let { workspace }: { workspace: TodoWorkspace } = $props();
 
 	let findCategoryMenuVisible = $state<boolean>(false);
+	let findCategoryAnchor = $state<HTMLDivElement | null>(null);
+	let deleteModalOpen = $state<boolean>(false);
 	let isHideable = $state<boolean>(workspace.is_hideable);
 
-	async function onDelete(workspace: TodoWorkspace): Promise<void> {
+	function openDeleteModal(): void {
+		deleteModalOpen = true;
+	}
+
+	function closeDeleteModal(): void {
+		deleteModalOpen = false;
+	}
+
+	async function onDelete(): Promise<void> {
+		deleteModalOpen = false;
 		loadingIndicator.start();
 		await todos.deleteWorkspace(workspace);
 		loadingIndicator.stop();
@@ -59,7 +71,7 @@
 	<div class="flex flex-1 items-center gap-2 md:w-40 md:flex-none">
 		<span class="truncate font-semibold">{workspace.title}</span>
 		<div class="pointer-fine:opacity-0 pointer-fine:group-hover:opacity-100">
-			<DeleteButton onClick={() => onDelete(workspace)} inModal={false} buttonStyle="minimal" />
+			<DeleteButton onClick={openDeleteModal} inModal={false} buttonStyle="minimal" />
 		</div>
 	</div>
 	<div class="order-last flex basis-full flex-col md:order-none md:flex-1 md:basis-auto md:flex-row md:flex-wrap md:items-center md:gap-2">
@@ -74,17 +86,16 @@
 				</button>
 			</div>
 		{/each}
-		<div class="relative">
+		<div class="relative" bind:this={findCategoryAnchor}>
 			<button
 				class="cursor-pointer py-1.5 text-base text-c-neutral-4 transition-all hover:text-c-neutral-7 md:py-0 md:text-xs dark:hover:text-white"
 				onclick={openFindCategoryMenu}
 			>
 				+ {ts.get.todos.category}
 			</button>
-			{#if findCategoryMenuVisible}
+			{#if findCategoryMenuVisible && findCategoryAnchor}
 				<FindCategoryMenu
-					x={0}
-					y={0}
+					target={findCategoryAnchor}
 					categories={todos.categories}
 					onclick={attachCategory}
 					close={closeFindCategoryMenu}
@@ -100,3 +111,13 @@
 		/>
 	</div>
 </div>
+
+{#if deleteModalOpen}
+	<ConfirmationModal
+		title={ts.get.todos.workspace_deletion_title}
+		description={ts.get.todos.workspace_deletion_description}
+		type="confirm-delete"
+		onConfirm={onDelete}
+		onCancel={closeDeleteModal}
+	/>
+{/if}

@@ -6,22 +6,22 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import IconTimer from '@lucide/svelte/icons/timer';
 	import TimeTrackingGroupingService from '$lib/services/TimeTrackingGroupingService';
+	import { getStartOfWeek } from '$lib/helpers/DateHelper';
+	import type { WeekStart } from '$lib/types/auth';
 
 	const tt = getTimeTracking();
 	const loadingIndicator = getLoadingIndicator();
 	const groupingService = new TimeTrackingGroupingService();
 
-	let { ts }: {
+	let { ts, weekStart }: {
 		ts: Translation;
+		weekStart: WeekStart;
 	} = $props();
 
 	let loaded = $state(false);
 
 	let weekBreakdown = $derived.by(() => {
-		const now = new Date();
-		const startOfWeek = new Date(now);
-		startOfWeek.setDate(now.getDate() - now.getDay() + (now.getDay() === 0 ? -6 : 1));
-		startOfWeek.setHours(0, 0, 0, 0);
+		const startOfWeek = getStartOfWeek(new Date(), weekStart);
 		const filtered = tt.entries.filter(
 			(e) => e.stopped_at !== null && new Date(e.started_at) >= startOfWeek
 		);
@@ -56,24 +56,23 @@
 				</span>
 			</div>
 			{#each weekBreakdown as category (category.projectId)}
-				<div class="flex flex-col gap-0.5">
-					<div class="flex items-center justify-between">
-						<div class="flex items-center gap-1.5">
-							<div
-								class="h-2.5 w-2.5 shrink-0 rounded-full"
-								style="background-color: {category.color}"
-							></div>
+				<div class="flex items-center gap-2.5">
+					<span class="flex h-3.5 w-3.5 shrink-0 items-center justify-center">
+						<span class="h-2.5 w-2.5 rounded-full" style="background-color: {category.color}"></span>
+					</span>
+					<div class="min-w-0 flex-1">
+						<div class="mb-0.5 flex items-center justify-between">
 							<span class="truncate text-xs">{category.title}</span>
+							<span class="text-xs tabular-nums text-c-neutral-4 dark:text-c-neutral-5">
+								{tt.formatDuration(category.minutes)}
+							</span>
 						</div>
-						<span class="text-xs tabular-nums text-c-neutral-4 dark:text-c-neutral-5">
-							{tt.formatDuration(category.minutes)}
-						</span>
-					</div>
-					<div class="h-1 w-full rounded-full bg-c-neutral-1 dark:bg-s-dark-3">
-						<div
-							class="h-1 rounded-full"
-							style="width: {weekTotal > 0 ? (category.minutes / weekTotal) * 100 : 0}%; background-color: {category.color}"
-						></div>
+						<div class="h-1 w-full rounded-full bg-c-neutral-1 dark:bg-s-dark-3">
+							<div
+								class="h-1 rounded-full"
+								style="width: {weekTotal > 0 ? (category.minutes / weekTotal) * 100 : 0}%; background-color: {category.color}"
+							></div>
+						</div>
 					</div>
 				</div>
 			{:else}

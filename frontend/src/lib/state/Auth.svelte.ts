@@ -2,12 +2,14 @@ import type {
 	AuthToken,
 	User,
 	UserSettings,
+	WeekStart,
 	LoginRequest,
 	LoginResponse,
 	RegisterRequest,
 	VerifyRequest,
 	AuthActionResponse,
 	VerifyActionResponse,
+	LoginActionResponse,
 	AccountDeletionRequestResponse,
 	AccountDeletionConfirmResponse,
 	PasskeyActionResponse,
@@ -21,6 +23,7 @@ import { apiRoutes } from '$lib/config/apiRoutes';
 import ApiService from '$lib/services/ApiService';
 import LocalStorageService from '$lib/services/LocalStorageService';
 import { SessionMonitor } from '$lib/state/SessionMonitor';
+import { WidgetBridge } from '$lib/state/WidgetBridge';
 import { SvelteMap } from 'svelte/reactivity';
 import {
 	formatDate,
@@ -43,6 +46,8 @@ export class Auth {
 	apiService: ApiService;
 	localStorage = new LocalStorageService();
 	profileCache = new SvelteMap<string, User>();
+	widgetBridge: WidgetBridge;
+	readonly loaded: Promise<void>;
 	private refreshInFlight: Promise<RefreshOutcome> | null = null;
 	private recoveryInFlight: Promise<boolean> | null = null;
 	private sessionMonitor: SessionMonitor;
@@ -51,7 +56,8 @@ export class Auth {
 	constructor() {
 		this.apiService = new ApiService(null);
 		this.apiService.setUnauthorizedHandler(() => this.recoverFromUnauthorized());
-		this.load().then();
+		this.widgetBridge = new WidgetBridge(this.apiService, () => this.loggedIn);
+		this.loaded = this.load();
 		this.sessionMonitor = new SessionMonitor(() => this.validateSession());
 	}
 
@@ -109,12 +115,20 @@ export class Auth {
 		this.apiService.updateAuthToken(null);
 	}
 
-	async login(email: string, password: string): Promise<boolean> {
+	async login(email: string, password: string): Promise<LoginActionResponse> {
 		const request: LoginRequest = { email, password, platform: PLATFORM };
-		const res = await this.apiService.post(apiRoutes.auth.login, request);
+		let res: LoginActionResponse;
+		try {
+			res = await this.apiService.postRaw<LoginActionResponse>(apiRoutes.auth.login, request);
+		} catch (error) {
+			// A non-JSON error body (e.g. a proxy's HTML 502) is a plain failed login.
+			if (error instanceof SyntaxError) return { success: false };
+			throw error;
+		}
 
-		if (!res) return Promise.resolve(false);
-		const login = res.data as LoginResponse;
+		// A 422 carries field errors as an object, not error codes: treat it as a plain failed login.
+		if (!res?.data) return { success: false, errors: Array.isArray(res?.errors) ? res.errors : undefined };
+		const login = res.data;
 
 		this.user = login.user;
 		this.authToken = {
@@ -126,9 +140,10 @@ export class Auth {
 		this.apiService.updateAuthToken(this.getToken()!);
 
 		this.save();
+		void this.widgetBridge.issueToken();
 		await this.loadAdditionalData();
 
-		return Promise.resolve(true);
+		return { success: true };
 	}
 
 	private shouldRefresh(expiresAt: number): boolean {
@@ -166,12 +181,28 @@ export class Auth {
 		this.apiService.updateAuthToken(this.getToken());
 
 		this.save();
+		void this.widgetBridge.issueToken();
 
 		return 'refreshed';
 	}
 
 	logout(): void {
+		this.widgetBridge.clear();
 		this.clear();
+	}
+
+	// Revokes the token on the server, then clears local state whatever the
+	// outcome: being offline or a failing server must never keep the user logged in.
+	async signOut(): Promise<void> {
+		try {
+			if (this.getToken()) {
+				await this.apiService.postWithStatus(apiRoutes.auth.logout, {}, AbortSignal.timeout(3000));
+			}
+		} catch {
+			// The token expires on its own; local logout must not depend on the server.
+		} finally {
+			this.logout();
+		}
 	}
 
 	setSessionExpiredHandler(handler: () => void): void {
@@ -185,6 +216,7 @@ export class Auth {
 
 	destroy(): void {
 		this.sessionMonitor.destroy();
+		this.widgetBridge.destroy();
 	}
 
 	async recoverFromUnauthorized(): Promise<boolean> {
@@ -270,6 +302,10 @@ export class Auth {
 		await this.apiService.post(apiRoutes.auth.forgotPassword, { email, platform });
 	}
 
+	async resendVerification(email: string, platform: string): Promise<void> {
+		await this.apiService.post(apiRoutes.auth.resendVerification, { email, platform });
+	}
+
 	async resetPassword(token: string, email: string, password: string, passwordConfirmation: string): Promise<AuthActionResponse> {
 		return this.apiService.postRaw<AuthActionResponse>(apiRoutes.auth.resetPassword, {
 			token,
@@ -325,6 +361,7 @@ export class Auth {
 		this.loggedIn = true;
 		this.apiService.updateAuthToken(this.getToken()!);
 		this.save();
+		void this.widgetBridge.issueToken();
 		await this.loadAdditionalData();
 	}
 
@@ -382,6 +419,17 @@ export class Auth {
 		const res = await this.apiService.put(apiRoutes.users.settings.updateTimeFormat, {
 			time_format: timeFormat
 		});
+		return Promise.resolve(res);
+	}
+
+	async updateWeekStart(weekStart: WeekStart): Promise<boolean> {
+		const res = await this.apiService.put(apiRoutes.users.settings.updateWeekStart, {
+			week_start: weekStart
+		});
+		if (res && this.user?.settings) {
+			this.user.settings.week_start = weekStart;
+			this.save();
+		}
 		return Promise.resolve(res);
 	}
 
@@ -489,6 +537,10 @@ export class Auth {
 
 	getTimeWithSecondsInUserPreferredFormat(input: string | Date): string {
 		return formatTimeWithSeconds(input, this?.user?.settings?.time_format ?? null);
+	}
+
+	getWeekStart(): WeekStart {
+		return this.user?.settings?.week_start ?? 'monday';
 	}
 
 	getTemperatureInUserPreferredFormat(temperature: number): number {

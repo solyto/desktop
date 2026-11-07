@@ -8,6 +8,8 @@
 	import { setUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { setViewPoint } from '$lib/state/Viewpoint.svelte';
 	import { setCookieConsent } from '$lib/state/CookieConsent.svelte';
+	import { setDevRequests } from '$lib/state/DevRequests.svelte';
+	import { setLoadedCovers } from '$lib/state/LoadedCovers.svelte';
 
 	// Order matters: Translation reads getAuth() at field initialisation, and
 	// Todos defaults to getAuth() in its constructor, so Auth is seeded first.
@@ -19,6 +21,8 @@
 	const uiNotifications = setUiNotifications();
 	const viewPoint = setViewPoint();
 	const cookieConsent = setCookieConsent();
+	const devRequests = setDevRequests();
+	const loadedCovers = setLoadedCovers();
 
 	let {
 		component: ComponentToRender,
@@ -43,7 +47,9 @@
 		loadingIndicator,
 		uiNotifications,
 		viewPoint,
-		cookieConsent
+		cookieConsent,
+		devRequests,
+		loadedCovers
 	};
 	// Runs once at mount: the harness is set up per test and never re-rendered with new props
 	function setUp(): void {

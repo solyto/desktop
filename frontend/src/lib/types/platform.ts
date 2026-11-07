@@ -17,3 +17,19 @@ export interface ElectronAPI {
 	installUpdate(): void;
 	onUpdaterStatus(callback: (status: UpdaterStatus) => void): () => void;
 }
+
+export interface SolytoWidgetsBridge {
+	postMessage(message: string): void;
+	onmessage: ((event: { data: unknown }) => void) | null;
+}
+
+export type WidgetAppMessage =
+	| { type: 'ready' }
+	| { type: 'setToken'; token: string; expiresAt: string; apiUrl: string }
+	| { type: 'clear' }
+	| { type: 'refresh' }
+	| { type: 'unsupported' };
+
+export type WidgetNativeMessage =
+	| { type: 'status'; needsToken: boolean }
+	| { type: 'navigate'; key: string; id?: string };

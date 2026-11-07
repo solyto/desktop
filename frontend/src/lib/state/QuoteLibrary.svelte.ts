@@ -19,7 +19,8 @@ export class QuoteLibrary {
 		hasExternalLinks: false,
 		hasReleases: false,
 		hasShelf: false,
-		entriesAreLinks: false
+		entriesAreLinks: false,
+		hasSmallForm: false
 	};
 	loaded = $state<boolean>(false);
 	entries = $state<Quote[]>([]);
@@ -43,7 +44,7 @@ export class QuoteLibrary {
 		const res = await this.apiService.list(apiRoutes.libraries.quotes.list);
 		if (res) {
 			this.entries = res.data as Quote[];
-			this.filteredEntries = this.entries;
+			this.search();
 			this.loaded = true;
 		}
 	}

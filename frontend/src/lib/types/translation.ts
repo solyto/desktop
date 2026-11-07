@@ -1,4 +1,4 @@
-export type Language = 'en' | 'de' | 'fr' | 'es';
+export type Language = 'en' | 'de' | 'fr' | 'es' | 'it' | 'ru';
 
 export interface LayoutRecords {
 	modal_explanation: string;
@@ -21,6 +21,9 @@ export interface LayoutRecords {
 	remove: string;
 	rename: string;
 	network_error: string;
+	rate_limited: string;
+	rate_limited_minutes_singular: string;
+	rate_limited_minutes_plural: string;
 }
 
 export interface NavigationRecords {
@@ -69,6 +72,8 @@ export interface SettingsRecords {
 	german: string;
 	french: string;
 	spanish: string;
+	italian: string;
+	russian: string;
 	tags: string;
 	new_tag: string;
 	localization: string;
@@ -97,6 +102,7 @@ export interface SettingsRecords {
 	timezone: string;
 	date_format: string;
 	time_format: string;
+	week_start: string;
 	nextcloud_no_token: string;
 	nextcloud_token: string;
 	telegram_bot_integration_success: string;
@@ -116,6 +122,8 @@ export interface SettingsRecords {
 	export_status_failed: string;
 	export_download: string;
 	export_rate_limited: string;
+	export_rate_limited_hours_singular: string;
+	export_rate_limited_hours_plural: string;
 	export_next_available: string;
 	export_expired: string;
 	export_download_failed: string;
@@ -211,6 +219,7 @@ export interface AuthRecords {
 	register_error: string;
 	login_success: string;
 	login_error: string;
+	login_email_unverified: string;
 	verify_success: string;
 	already_verified: string;
 	verify_general_error: string;
@@ -221,6 +230,11 @@ export interface AuthRecords {
 	forgot_password_sent_title: string;
 	forgot_password_sent_desc: string;
 	forgot_password_resend: string;
+	resend_verification_link: string;
+	resend_verification_title: string;
+	resend_verification_hint: string;
+	resend_verification_send: string;
+	resend_verification_sent_desc: string;
 	reset_password_title: string;
 	reset_password_new: string;
 	reset_password_confirm: string;
@@ -302,6 +316,10 @@ export interface TodoRecords {
 	uncategorized: string;
 	delete_confirm_label: string;
 	delete_confirm_message: string;
+	category_deletion_title: string;
+	category_deletion_description: string;
+	workspace_deletion_title: string;
+	workspace_deletion_description: string;
 	add_subtask: string;
 	sort_by_score: string;
 	no_description: string;
@@ -422,6 +440,32 @@ export interface WidgetRecords {
 
 export interface NoteRecords {
 	notebook: string;
+	dashboard: string;
+	table_add_row_above: string;
+	table_add_row_below: string;
+	table_delete_row: string;
+	table_add_column_left: string;
+	table_add_column_right: string;
+	table_delete_column: string;
+	table_delete: string;
+	editor_undo: string;
+	editor_redo: string;
+	editor_heading_1: string;
+	editor_heading_2: string;
+	editor_heading_3: string;
+	editor_bold: string;
+	editor_italic: string;
+	editor_strikethrough: string;
+	editor_inline_code: string;
+	editor_bullet_list: string;
+	editor_ordered_list: string;
+	editor_blockquote: string;
+	editor_code_block: string;
+	editor_horizontal_rule: string;
+	editor_insert_link: string;
+	editor_insert_table: string;
+	editor_insert_image: string;
+	editor_formatting: string;
 	no_notes: string;
 	no_notes_desc: string;
 	new_note: string;
@@ -431,8 +475,8 @@ export interface NoteRecords {
 	edit_folder: string;
 	delete_note: string;
 	delete_folder: string;
+	folder_deletion_description: string;
 	editor: string;
-	output: string;
 	create_note_success: string;
 	create_folder_success: string;
 	create_error: string;
@@ -443,7 +487,6 @@ export interface NoteRecords {
 	export: string;
 	created_days_ago: string;
 	updated_days_ago: string;
-	new_notes: string;
 	last_updated: string;
 	enter_note_title: string;
 	enter_folder_title: string;
@@ -732,6 +775,7 @@ export interface DevRecords {
 		status_completed: string;
 		status_cancelled: string;
 		validation_error: string;
+		save_error: string;
 		priority_1: string;
 		priority_2: string;
 		priority_3: string;
@@ -746,6 +790,12 @@ export interface DevRecords {
 		comments_submit: string;
 		current_requests: string;
 		resolved_requests: string;
+		edit: string;
+		fixed_in_version: string;
+		fixed_in: string;
+		fixed_in_included: string;
+		fixed_in_pending: string;
+		fixed_in_current_version: string;
 	};
 }
 
@@ -784,6 +834,7 @@ export interface FeedRecords {
 	add_feed: string;
 	edit_feed: string;
 	delete_feed: string;
+	delete_feed_description: string;
 	title: string;
 	url: string;
 	keywords: string;
@@ -881,6 +932,15 @@ export interface CalendarRecords {
 		3: string;
 		4: string;
 	};
+	// Optional grammatical variants for "on the <ordinal> <weekday>", for languages
+	// where the weekday is inflected there or the ordinal agrees with it (ru).
+	// Falls back to `weekdays` / `recurrence_ordinals` when not set.
+	recurrence_weekdays?: {
+		[key: number]: string;
+	};
+	recurrence_ordinals_by_weekday?: {
+		[weekday: number]: { [ordinal: number]: string };
+	};
 	choose_calendar: string;
 	request_sync: string;
 	sync_success: string;
@@ -936,6 +996,7 @@ export interface CalendarRecords {
 }
 
 export interface ContactRecords {
+	all: string;
 	add_contact: string;
 	no_contacts: string;
 	no_contacts_desc: string;

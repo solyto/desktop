@@ -2,25 +2,19 @@
 	import { onMount } from 'svelte';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import { formatDateWithoutYear, getCalendarWeek, getISODateInfo, isDateToday, getHoursOfDay, isOffHour } from '$lib/helpers/DateHelper';
+	import { formatDateWithoutYear, getCalendarWeek, isDateToday, getHoursOfDay, isOffHour, getMobileHourRows } from '$lib/helpers/DateHelper';
 	import Day from '$lib/components/calendars/views/week/Day.svelte';
 
 	const calendars = getCalendars();
 	const ts = getTranslation();
 	const hours = getHoursOfDay();
-	const mobileRows = `minmax(4rem, auto) ${hours
-		.map((hour) => (isOffHour(hour) ? '1.5rem' : '3.5rem'))
-		.join(' ')}`;
+	const mobileRows = `minmax(4rem, auto) ${getMobileHourRows()}`;
 
 	const columnWidth = 'calc((100vw - 2rem) / 3)';
 
-	let week = $derived(getCalendarWeek(calendars.currentWeekYear, calendars.currentWeek));
+	let week = $derived(getCalendarWeek(calendars.currentWeekStart));
 
-	onMount(() => {
-		const iso = getISODateInfo(new Date());
-		calendars.currentWeekYear = iso.year;
-		calendars.currentWeek = iso.week;
-	});
+	onMount(() => calendars.goToCurrentWeek());
 </script>
 
 <div class="h-full w-full overflow-auto bg-c-bg dark:bg-s-dark">

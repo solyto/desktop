@@ -4,7 +4,6 @@ import { setContext, getContext } from 'svelte';
 import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
-import { getUrlFormat } from '$lib/helpers/DateHelper';
 import { page } from '$app/state';
 import LocalStorageService from '$lib/services/LocalStorageService';
 
@@ -72,16 +71,18 @@ export class CheckInData {
 	async save(request: CreateCheckInRequest): Promise<boolean> {
 		const ok = await this.apiService.create(apiRoutes.checkIn.create, request);
 		if (!ok) return false;
+		this.auth.widgetBridge.notifyChanged();
 		await this.load();
 		return true;
 	}
 
 	async saveSettings(settings: CheckInSettings): Promise<void> {
-		await this.apiService.put(apiRoutes.users.settings.updateCheckInSettings, {
+		const ok = await this.apiService.put(apiRoutes.users.settings.updateCheckInSettings, {
 			enabled_trackers: settings.enabledTrackers,
 			selected_sports: settings.selectedSports
 		});
 		this.settings = settings;
+		if (ok) this.auth.widgetBridge.notifyChanged();
 	}
 
 	prevMonth(): void {
@@ -100,11 +101,7 @@ export class CheckInData {
 	}
 
 	getDayData(day?: string): CheckIn | null {
-		if (!day)
-			return (
-				this.data.find((t) => t.date === getUrlFormat(new Date(this.selectedDate as string))) ??
-				null
-			);
+		if (!day) return this.data.find((t) => t.date === this.selectedDate) ?? null;
 
 		return this.data.find((t) => t.date === day) ?? null;
 	}
